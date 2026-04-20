@@ -1,0 +1,10 @@
+{
+	"id": "get-importer-sync",
+	"name": "Get笔记 Importer",
+	"version": "3.0.0",
+	"minAppVersion": "1.5.0",
+	"description": "Import Get笔记 Notes to Obsidian",
+	"author": "原作者:Hua Shan | 魔改者: springrain | 公众号: 及时春雨",
+	"authorUrl": "https://github.com/geekhuashan",
+	"isDesktopOnly": true
+}
