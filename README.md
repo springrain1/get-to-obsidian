@@ -178,7 +178,7 @@ cp deploy.sh deploy.local.sh
    - 点击"登录"
 3. 等待约 10 秒，插件会自动检测登录成功
 
-<img width="350" alt="登录界面" src="https://github.com/jia6y/get-to-obsidian/assets/1456952/7754586a-e9e2-40b7-93c1-0dbcc0631a1e">
+![插件主界面](images/screenshot-main-ui.png)
 
 #### 步骤 3：配置基本设置（可选）
 
@@ -191,8 +191,6 @@ cp deploy.sh deploy.local.sh
 1. 点击"立即同步"按钮
 2. 等待浏览器自动打开并导出数据
 3. 插件会自动下载、解析并导入笔记
-
-<img width="300" alt="同步过程" src="https://github.com/jia6y/get-to-obsidian/assets/1456952/24910880-6201-497f-8359-191e476a5bed">
 
 ### 日常使用
 
@@ -212,8 +210,6 @@ cp deploy.sh deploy.local.sh
      - 📊 已同步笔记数量
      - ✅ 同步状态
 
-<img width="350" alt="自动同步" src="https://github.com/jia6y/get-to-obsidian/assets/1456952/71af02c3-9c14-4eec-b56f-d6207178ccd5">
-
 #### 手动同步
 
 **方式 1：自动导出导入**
@@ -224,8 +220,6 @@ cp deploy.sh deploy.local.sh
 1. 在 Get笔记 网页版导出备份（选择 HTML 格式）
 2. 在插件界面选择导出的 ZIP 文件
 3. 点击导入
-
-<img width="350" alt="手动导出" src="https://github.com/jia6y/get-to-obsidian/assets/1456952/b6222501-b0e7-45f4-8acb-6b489c9b1fc0">
 
 ### 高级功能
 
@@ -242,8 +236,6 @@ cp deploy.sh deploy.local.sh
   - **链接模式**：显示文件链接，保持文件同步
   - **嵌入模式**：直接嵌入笔记内容
 - 画布大小可调整：小、中、大
-
-<img width="252" alt="Canvas示例" src="https://github.com/jia6y/get-to-obsidian/assets/1456952/b1bd2399-87f1-4d60-80cf-111bbce8fe68">
 
 #### 附件导入设置
 
