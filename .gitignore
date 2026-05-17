@@ -1,0 +1,13 @@
+node_modules/
+*.js.map
+.DS_Store
+.vscode/
+.idea/
+*.log
+.get/
+tmp_*.json
+debug_*.js
+fix_*.js
+error.log
+.kiro/
+reference/
