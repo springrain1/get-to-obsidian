@@ -5,6 +5,15 @@
 该格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 且本项目遵循 [语义化版本规范 (Semantic Versioning)](https://semver.org/spec/v2.0.0.html)。
 
+## [3.2.0] - 2026-05-17
+
+### 修复 (Fixed)
+- 📝 **文档合规性修复**: 移除所有外部图片链接，使用本地截图，符合 Obsidian 官方审核要求
+- 🔗 **README 优化**: 添加英文描述，确保国际用户可以理解插件功能
+- 🖼️ **图片资源**: 添加本地 images 文件夹，包含插件界面截图
+
+---
+
 ## [3.1.0] - 2026-04-25
 
 ### 新增 (Added)

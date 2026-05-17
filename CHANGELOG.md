@@ -5,6 +5,15 @@ All notable changes to the Get笔记 Importer plugin will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-05-17
+
+### Fixed
+- 📝 **Documentation Compliance**: Removed all external image links, using local screenshots to comply with Obsidian official review requirements
+- 🔗 **README Optimization**: Added English description to ensure international users can understand plugin features
+- 🖼️ **Image Assets**: Added local images folder with plugin interface screenshots
+
+---
+
 ## [3.1.0] - 2026-04-25
 
 ### Added
