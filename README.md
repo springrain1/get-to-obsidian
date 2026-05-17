@@ -2,10 +2,14 @@
 
 <div align="center">
 
+A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content into Obsidian with incremental sync, auto-sync, and multiple visualization options.
+
 一个将 [Get笔记](https://www.biji.com/) 的内容同步到 Obsidian 的插件。支持增量同步、自动同步和多种可视化方式。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Obsidian](https://img.shields.io/badge/Obsidian-0.15.0+-purple)](https://obsidian.md/)
+
+[English Documentation](README.en.md) | [中文文档](#)
 
 [功能特性](#-功能特性) • [安装](#-安装) • [使用指南](#-使用指南) • [常见问题](#-常见问题) • [贡献](#-贡献)
 
