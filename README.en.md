@@ -15,44 +15,93 @@ A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content int
 
 ---
 
-## 🎉 Version 3.1.0 Latest Update
+## 🎉 Version 3.7.0 Latest Update
 
 ### ✨ New Features
 
-- **🚀 Selective Attachment Import**: Added a new UI section to choose which attachment types (Images, Audio, Video, Documents) to import, preventing unwanted clutter in the Obsidian vault
-- **🔗 Source Link YAML Extraction**: Automatically extracts the "Original Source" link from notes and saves it as a clean `source` field in YAML Frontmatter for better metadata management
-- **🛡️ HTML Parsing Defense (Fidelity Preservation)**: Implemented a robust traversal mechanism to prevent body content loss caused by malformed or unclosed `<p>` tags in source exports
+- **📊 Global Quota Manager**: Unified management of OpenAPI read/write/write_note quotas, all modules share quota state to avoid duplicate queries and inconsistencies
+- **📈 Quota Visualization Panel**: Real-time display of remaining quotas (daily/monthly) in main interface and sidebar, automatic warnings when below threshold, countdown display when quota exhausted
+- **🔔 Quota Circuit Breaker**: Automatically disables related features when API quota exhausted error is received, avoiding forced interruption at worst timing
 
 ### 🔧 Improvements
 
-- **📊 Large File Processing Strategy**: Re-engineered ZIP handling to prioritize direct OS paths on desktop. Introduced the **Streaming Fallback** for 3GB+ files on restricted environments (Mobile/Tablet), resolving the "requested file could not be read" error
-- **🧹 Refined Markdown Escaping**: Optimized the backslash cleaning regex to only target visual noise (`\_`, `\.`) while preserving critical structural markers for links, headers, and code blocks
+- **🎨 "Static-Dynamic Separation" Architecture Refactor**: Migrated persistent configurations to native plugin settings tab, Modal popups now serve only as interactive task executors
+- **⚙️ Settings Panel Optimization**: Configuration items grouped by function, improving user experience and maintainability
 
 ### 🐛 Bug Fixes
 
-- **Content Loss in Long Notes**: Fixed a critical bug where specific HTML structures from exports triggered accidental mass deletion of note bodies during metadata extraction
-- **Fenced Code Block Unmasking**: Improved HTML entity decoding within `<pre><code>` blocks to ensure symbols like `<` and `&` appear correctly in Markdown
+- **Empty Folder Creation**: Fixed issue where empty folders were created in certain situations
+- **OpenAPI Call Count Statistics**: Fixed inaccurate quota consumption tracking
+
+---
+
+## 📋 Version History Highlights
+
+### V3.6.0 - Configuration Management Refactor
+- 🎨 "Static-Dynamic Separation" architecture: persistent configs migrated to settings tab
+- ⚙️ Settings panel grouped by function
+
+### V3.5.0 - Bidirectional Sync
+- 🔄 OpenAPI Bidirectional Sync: True bidirectional sync between Obsidian ↔ Get Notes
+- 🖼️ Image Note Upload: Auto-upload local images (SHA-256 global deduplication)
+- 🗑️ Remote Deletion Sync: Detect cloud-deleted notes and handle per user policy
+- 🌳 Parent-Child Note Relationships: Bidirectional mapping between local folder hierarchy and cloud parent_id
+- 🔀 Conflict Merge UI: Three-column comparison interface for interactive conflict resolution
+
+### V3.4.0 - Semantic Search (RAG)
+- 🔍 OpenAPI Semantic Search: Integrated cloud vector semantic search capability
+- 📌 Sidebar Search Panel: Real-time display of related cloud content
+- ✏️ Text Selection Search: Quick semantic search after selecting text
+- 🎯 Smart Result Display: Distinguish local/cloud content, one-click sync support
+
+### V3.3.0 - OpenAPI Sync Channel
+- 🚀 OpenAPI Sync Channel: New sync method based on REST API
+- 📚 Knowledge Base Sync: Support owned and subscribed knowledge bases
+- 👥 Subscribed Blogger Sync: Fetch content from followed creators
+- 🎙️ Live Transcript Sync: Sync AI-transcribed live content
+- 🌳 Multi-level Parent-Child Directory Tree: Restore cloud note nesting relationships
+- 📱 Mobile Support: OpenAPI channel perfectly supports mobile
+- 🎯 Unified Naming Convention: Adopts Obsidian community best practices
 
 ---
 
 ## ✨ Features
 
 ### Core Features
+
+- ✅ **Dual Channel Sync**: Support both traditional Playwright + ZIP export and OpenAPI REST API sync methods
 - ✅ **Incremental Sync**: Smart detection to import only new notes, avoiding duplicates
 - ✅ **Content Update Detection**: Automatically detects and re-imports edited notes
 - ✅ **Selective Attachment Import**: Choose which attachment types to import (Images, Audio, Video, Documents)
 - ✅ **Source Link Extraction**: Automatically extracts and saves source links to YAML frontmatter
-- ✅ **Multiple Sync Methods**: Auto-sync on startup, hourly auto-sync, manual sync, ZIP import
+- ✅ **Multiple Sync Methods**: Auto-sync on startup, scheduled auto-sync (configurable interval), manual sync, ZIP import
+
+### OpenAPI Advanced Features
+
+- 🔄 **Bidirectional Sync**: True bidirectional sync between Obsidian ↔ Get Notes, support pushing local created/modified/deleted notes to cloud
+- 📚 **Knowledge Base Sync**: Sync owned knowledge bases and subscribed external knowledge bases, organized by topic dimension
+- 👥 **Subscribed Blogger Sync**: Fetch content published by followed creators (Douyin, WeChat, Dedao, etc.) to local
+- 🎙️ **Live Transcript Sync**: Sync AI-transcribed live content (including AI summary and full transcript text)
+- 🔍 **Semantic Search (RAG)**: Integrated cloud vector semantic search capability, supports global recall and knowledge base recall
+- 🖼️ **Image Note Upload**: Automatically recognizes local images in Markdown, uploads via OSS (SHA-256 global deduplication)
+- 🗑️ **Remote Deletion Sync**: Detects notes deleted on cloud and handles per user policy (notify/trash/archive)
+- 🌳 **Parent-Child Note Relationships**: Bidirectional mapping between local folder hierarchy and cloud parent_id
+- 🔀 **Conflict Merge UI**: Three-column comparison interface for interactive conflict resolution
+- 📊 **Quota Management**: Real-time display of API quota usage, automatic circuit breaker protection
 
 ### Visualization
+
 - 🎨 **Moments Timeline**: Chronological view of all notes
 - 🎨 **Canvas Board**: Visual network of notes (link or embed mode)
+- 📌 **Sidebar Search Panel**: Real-time display of cloud content related to current note
 
-### Advanced Features
+### Traditional Features
+
 - 🔗 **Bi-directional Links** (Experimental): Preserves `[[wiki-links]]` format
 - 📅 **Merge by Date**: Optional merging of same-day notes into single file
 - ⚡ **Highlight Syntax**: Auto-converts `<mark>` to `==highlight==`
 - 📄 **YAML Frontmatter**: Metadata stored as standard Obsidian properties
+- 💾 **Smart File Handling**: Desktop prioritizes original path, mobile auto-uses streaming temp file
 
 ---
 
@@ -157,8 +206,9 @@ cp deploy.sh deploy.local.sh
 
 #### Step 3: Configure Settings (Optional)
 - **Main Folder**: Root directory for notes (default: `get`)
-- **Memo Subfolder**: Subfolder for memos (default: `memos`)
-- Notes will be saved in `get/memos/2024-01-15/`
+- **Note Subfolder**: Subfolder for notes (default: `notes`)
+- Notes will be saved in `get/notes/2024-01-15/`
+
 
 #### Step 4: First Sync
 1. Click "Sync Now"
@@ -169,12 +219,503 @@ cp deploy.sh deploy.local.sh
 
 #### Auto-Sync (Recommended)
 - **On Startup**: Enable in settings, syncs when Obsidian opens
-- **Hourly**: Enable for automatic hourly background sync
+- **Scheduled**: Enable for automatic scheduled background sync (configurable interval)
 - **Status Display**: Shows last sync time and memo count
 
 #### Manual Sync
 - Click "Sync Now" button
 - Or use command: `Ctrl/Cmd + P` → `Get笔记: Sync Now`
+
+### Experimental Options
+
+**1. Bi-directional Links Support**
+- Supports converting escaped `\[\[wiki-links\]\]` in Get Notes back to native Obsidian `[[wiki-links]]` format, enabling direct click-to-navigate in Obsidian.
+- **Full Channel Coverage (V3.7.0+)**: Perfect support for both **ZIP Local Import** and **OpenAPI Cloud Sync** channels! All escaped bi-directional links in the main text, references, and webpage content summaries are globally scanned and elegantly converted.
+
+**2. Merge by Date**
+- Merges all notes created on the same day into a single Markdown file.
+- Filename format: `2024-01-15.md` (unified naming specification since V3.3+).
+- **OpenAPI Industrial Best Practice Mechanism (V3.7.0+)**:
+  - **Auto-Stripping**: During cloud synchronization, the system automatically strips the sub-Frontmatter (YAML block) of appended child notes, ensuring that the merged file contains only a single valid YAML block at the very top.
+  - **Metadata Aggregation (uids Array)**: The YAML header of the file adaptively upgrades the single `uid` string to a `uids: ["uid1", "uid2", ...]` array, and updates the `modified` date to reflect the latest modification timestamp.
+  - **Index & Incremental Deduplication**: Integrates seamlessly with the local `UidIndex` cache scanner. Secondary incremental synchronization can 100% recognize all synced notes within the merged file, completely avoiding duplicate cloud API requests and maximizing your API quota savings.
+
+### OpenAPI Advanced Features
+
+#### Semantic Search (RAG) Feature
+
+The semantic search feature helps you quickly find related notes, blogger content, live transcripts, etc. from the cloud while writing, serving as reference material.
+
+**Prerequisites**:
+- OpenAPI credentials configured (Client ID and API Key)
+- Switched to OpenAPI sync mode
+
+##### Method 1: Sidebar Search Panel (Recommended)
+
+1. **Open Search Panel**
+   - Click the **"Search (🔍)"** icon on the left Ribbon navigation bar.
+   - Or use command: `Ctrl/Cmd + P` → `Open Semantic Search View`
+
+2. **Manual Search**
+   - Enter query in search box
+   - Select search scope (Global / Specific knowledge base)
+   - Adjust Top-K count (1-10, default 5)
+   - Click "Search Now"
+
+##### Method 2: Context Menu Quick Search (V3.7.0+)
+
+1. **One-Click Right-Click Search**
+   - **Select any text block** inside any note in the editor, and right-click.
+   - In the pop-up context menu, click **`Search with selected text`** (with a 🔍 search icon).
+   - The plugin will automatically expand the right sidebar, populate the search field with the selected text, and immediately recall related cloud knowledge for you!
+
+3. **View Results**
+   - Result list shows: Title / Type badge / Content snippet / Created time
+   - Types include:
+     - 📝 Personal Note (NOTE)
+     - 👤 Blogger Content (BLOGGER)
+     - 🎙️ Live Transcript (LIVE)
+     - 🌐 External Webpage (URL)
+     - 📚 Dedao Ebook (DEDAO)
+
+4. **Open Notes**
+   - **📂 Local**: Click to open local file directly
+   - **☁️ Cloud Only**: Click to open preview Modal
+     - View full content
+     - Click "Sync to Local" to download immediately
+     - Click "Copy Content" to copy to clipboard
+
+##### Method 2: Real-time Follow Mode
+
+1. **Enable Real-time Follow**
+   - Enable "Real-time Follow" option in plugin settings
+   - Configure debounce time (default 3 seconds, range 1-10 seconds)
+
+2. **Auto Search**
+   - Automatically triggers search when switching notes
+   - Automatically searches when editing notes (3 seconds after stopping input)
+   - Sidebar automatically displays related content
+
+3. **Query Text Extraction Rules**
+   - Priority: frontmatter `title` field
+   - Secondary: first `# heading`
+   - Fallback: first 200 characters of content
+
+4. **Manual Override**
+   - Can still manually input queries in real-time mode
+   - Automatically switches to manual mode after entering new query
+   - Resumes real-time mode after switching notes
+
+##### Method 3: Text Selection Search
+
+1. **Select Text**
+   - Select text to search in editor (max 500 characters)
+
+2. **Trigger Search**
+   - Right-click menu: "Search Similar Content in Cloud"
+   - Or use hotkey (configurable in settings)
+
+3. **View Results**
+   - Results displayed in new Modal
+   - Same operations as sidebar
+
+##### Method 4: Command Palette Quick Search
+
+1. **Current Note Search**
+   - `Ctrl/Cmd + P` → `Get Notes: Recall from Current Note`
+   - Automatically uses current note's title and summary as query
+
+2. **Custom Query**
+   - `Ctrl/Cmd + P` → `Get Notes: Quick Recall`
+   - Input box appears, shows results after entering query
+
+##### Knowledge Base Scope Filter
+
+1. **Select Search Scope**
+   - Select from dropdown at top of sidebar:
+     - 🌐 **Global**: Search all content (default)
+     - 🏠 **My: {topic name}**: Search only owned knowledge base
+     - 🔗 **Subscribed: {topic name}**: Search only subscribed knowledge base
+
+2. **Scope Switching**
+   - Automatically re-searches after switching scope (if query exists)
+   - Only shows "Global" option if no knowledge bases synced
+
+##### Quota Management
+
+1. **View Remaining Quota**
+   - Sidebar bottom shows: `Today's Remaining Searches: X/1000`
+   - Warning color when remaining < 50
+   - Reminder before each search when remaining < 10
+
+2. **Quota Exhausted Handling**
+   - Automatically disables real-time follow when quota exhausted
+   - Shows quota reset time (next day 00:00)
+   - Can view detailed quota status in main interface
+
+##### Best Practices
+
+**✅ Recommended**:
+- Enable real-time follow while writing to auto-discover related materials
+- Use knowledge base scope filter for precise professional content
+- Adjust Top-K to 3-5 to balance quality and quota consumption
+- Use "Sync to Local" to save important query results
+
+**⚠️ Notes**:
+- Real-time follow quickly consumes read quota (1000 times/day)
+- Recommend enabling only when needed, use manual search daily
+- System auto-disables real-time follow when quota nearly exhausted
+- Search results not cached locally, always real-time calls
+
+#### Bidirectional Sync Feature
+
+Bidirectional sync allows you to create, modify, and delete notes in Obsidian and have them automatically pushed to the Get Notes cloud, achieving true bidirectional synchronization.
+
+**Prerequisites**:
+- OpenAPI credentials configured (Client ID and API Key)
+- Switched to OpenAPI sync mode
+
+##### Configuring Bidirectional Sync
+
+1. **Enable Bidirectional Sync**
+   - Open Plugin Settings → OpenAPI Config → Bidirectional Sync
+   - Turn on the "Enable Bidirectional Sync" toggle
+   - Specify the bidirectional sync folder path (e.g., `get/notes`)
+
+2. **Select Trigger Mode**
+   - **Manual Only**: Uploads only when clicking the "Push Local Changes" button
+   - **On File Save**: Automatically uploads every time you save a file (5-second throttle)
+   - **Manual + Scheduled**: Manual button + scheduled auto-sync
+
+3. **Configure Conflict Strategy**
+   - **Local Priority**: Local modifications overwrite the cloud directly
+   - **Remote Priority**: Cloud modifications overwrite local copies
+   - **Mark Conflict**: Generates a `.conflict.md` conflict file, waiting for manual merging
+   - **Interactive Merge**: Displays a three-column comparison panel to visually resolve conflicts
+
+##### Uploading Newly Created Notes
+
+1. **Create a Note Inside the Sync Folder**
+   - Create a plain text note (plain_text)
+   - Or create a link note (add `source_url` field to frontmatter)
+
+2. **Auto Upload**
+   - Automatically detected on file save (if "On File Save" trigger is enabled)
+   - Or click "Push Local Changes" to upload manually
+
+3. **Upon Successful Upload**
+   - `uid` (cloud note ID) is automatically added to frontmatter
+   - `source: Obsidian` added to frontmatter (marking the source)
+   - `synced_at` (sync timestamp) added to frontmatter
+
+##### Uploading Image Notes
+
+1. **Insert Local Images in a Note**
+   ```markdown
+   ![Description](images/photo.jpg)
+   or
+   ![[images/photo.jpg]]
+   ```
+
+2. **Enable Image Upload**
+   - Turn on "Upload Image Attachments" in settings (disabled by default)
+   - The system will automatically identify local image references
+
+3. **Deduplicated Upload**
+   - Uses SHA-256 hash for global deduplication
+   - The same image is uploaded only once, saving API quota
+   - Hits cache even across different notes, folders, or after renaming
+
+4. **View Deduplication Statistics**
+   - Settings UI displays: Number of uploaded images
+   - Displays estimated saved quota count
+   - Mapping table can be manually cleared
+
+##### Updating Synced Notes
+
+1. **Modify Note Content**
+   - Edit the title, body, tags, etc.
+   - Save the file
+
+2. **Smart Update Detection**
+   - The system determines if content actually changed using hashes
+   - Calls the API only when contents have truly modified
+   - Avoids unnecessary quota consumption
+
+3. **Conflict Detection**
+   - Automatically checks if there are cloud updates before uploading
+   - If both sides have modifications, handles according to the configured conflict strategy
+
+##### Deletion Sync
+
+1. **Delete Note Locally**
+   - Delete a file in Obsidian (or move it to trash)
+   - The system automatically records the pending delete `uid`
+
+2. **Sync Deletion to Cloud**
+   - Automatically calls deletion API on the next sync
+   - Removed from the queue after successful deletion
+
+3. **Optionally Disable Deletion Sync**
+   - Turn off "Sync Deletions" toggle in settings
+   - Local deletion will not affect the cloud copy
+
+##### Syncing Remote Deletion to Local
+
+1. **Enable Remote Deletion Detection**
+   - Select "Remote Deletion Policy" in settings:
+     - **Disabled** (Default): Do not check for remote deletions
+     - **Notify**: Alert on detection, do not delete local files
+     - **Trash**: Move to system trash
+     - **Archive**: Move to `{getTarget}/_remote_deleted/` directory
+
+2. **Detection Mechanism**
+   - Automatically executed after each downstream sync completes
+   - Compares local files by pulling lightweight full ID lists
+   - Only processes notes synced within the last 7 days (to avoid misjudgments)
+
+3. **Accidental Deletion Protection**
+   - Rejects execution if the detected deletion rate is > 30% in a single sync
+   - Forcefully downgrades to "Notify" mode
+   - Logs warnings in the sync history
+
+##### Parent-Child Note Relationships
+
+1. **Local Folder Hierarchy → Cloud parent_id**
+   - Note is located at `ParentNoteName/ChildNoteName.md`
+   - Same folder contains `ParentNoteName/ParentNoteName.md`
+   - Automatically establishes parent-child relationship during upload
+
+2. **Explicit Frontmatter Declaration (Priority)**
+   ```yaml
+   ---
+   parent_id: "Parent note's uid"
+   # or
+   parent_id_local: "Parent note's local path"
+   ---
+   ```
+
+3. **Cloud children_ids → Local Bidirectional Links**
+   - Automatically appends to the parent note's end during downstream sync:
+   ```markdown
+   ## Child Notes
+   - [[Child Note 1]]
+   - [[Child Note 2]]
+   ```
+
+##### Quota Management
+
+1. **Pre-upload Check**
+   - Automatically estimates quota consumption for this upload
+   - Displays warning and asks whether to continue if quota is insufficient
+
+2. **Quota Types**
+   - **write** (2000/day): Update/delete notes
+   - **write_note** (50/day): Create new notes
+   - **read** (1000/day): Query, conflict detection
+
+3. **Quota Exhausted Handling**
+   - Stops immediately upon receiving error 10203
+   - Automatically disables scheduled bidirectional sync
+   - Displays remaining time until next reset
+
+##### Best Practices
+
+**✅ Recommended**:
+- Use "Manual" trigger mode to avoid uploading half-written drafts
+- Enable "Interactive Merge" conflict strategy to precisely control merge outcomes
+- Periodically check quota usage to plan your uploads
+- Back up important notes locally before enabling bidirectional sync
+
+**⚠️ Notes**:
+- Creating notes quota is limited (50/day), batch uploads should be done in stages
+- Image upload is off by default to prevent unexpected heavy quota consumption
+- Notes outside the bidirectional sync folder will not be uploaded
+- Deletions are irreversible, recommended to test with "Notify" mode first
+
+#### Knowledge Base & Blogger Sync
+
+Sync the knowledge bases you participate in, the blogger content you subscribe to, and completed live transcripts in Get Notes.
+
+**Prerequisites**:
+- OpenAPI credentials configured
+- Switched to OpenAPI sync mode
+
+##### Syncing Owned Knowledge Bases
+
+1. **Open Knowledge Base Selection View**
+   - Click the "Sync Knowledge Base" button on the main panel
+   - The system automatically fetches the list of all available knowledge bases
+
+2. **Select Knowledge Bases to Sync**
+   - The list shows: Topic Name / Description / Note Count / Created Time
+   - Multi-selection is supported
+   - Check the desired items and click "Start Sync"
+
+3. **Sync Results**
+   - Notes are saved to: `{getTarget}/知识库/{TopicName}/{NoteTitle}.md`
+   - frontmatter includes:
+     - `topic_id`: Topic ID
+     - `topic_name`: Topic Name
+     - `source: Get笔记知识库`
+     - `note_type`: Note type
+
+4. **Multi-level Directory Tree (Optional)**
+   - Enable "Multi-level Directory Tree" in settings
+   - Restores cloud parent-child relationships as local folder hierarchy
+   - e.g., `知识库/Frontend Learning/React Basics/React Basics.md` and `知识库/Frontend Learning/React Basics/Hooks Deep Dive.md`
+
+##### Syncing Subscribed External Knowledge Bases
+
+1. **Open Knowledge Base Selection View**
+   - Both owned and subscribed knowledge bases are displayed in the list
+   - Subscribed knowledge bases are marked with `🔗 Subscribed`
+
+2. **Select Subscribed Knowledge Bases to Sync**
+   - Operates exactly the same way as syncing owned knowledge bases
+
+3. **Sync Results**
+   - Notes are saved to: `{getTarget}/订阅知识库/{TopicName}/{NoteTitle}.md`
+   - frontmatter includes:
+     - `source: Get笔记订阅知识库`
+     - `is_subscribed: true`
+
+##### Syncing Subscribed Blogger Content
+
+1. **Open Blogger Selection View**
+   - Click "Sync Subscribed Blogger" button on the main panel
+   - The system automatically scans all knowledge bases to collect the list of bloggers
+
+2. **View Blogger List**
+   - Shows: Blogger Avatar / Account Name / Platform (Douyin/WeChat/Dedao) / Associated Topic
+   - Deduplicated automatically if the same blogger belongs to multiple topics
+
+3. **Select Bloggers and Sync**
+   - Multi-selection is supported
+   - Click "Start Sync"
+
+4. **Sync Results**
+   - Content is saved to: `{getTarget}/订阅博主/{Platform}_{AccountName}/{ContentTitle}.md`
+   - e.g., `get/订阅博主/抖音_SomeBlogger/RAG today.md`
+   - frontmatter includes:
+     - `uid`: post_id_alias
+     - `source: Get笔记订阅博主`
+     - `platform`: Platform name
+     - `account_name`: Blogger account name
+     - `tags: [订阅博主]`
+
+##### Syncing Live Transcripts
+
+1. **Open Live Selection View**
+   - Click "Sync Live Transcript" button on the main panel
+   - The system fetches all live broadcasts with completed AI transcription
+
+2. **View Live Broadcasts List**
+   - Shows: Live Title / Speaker / Completion Time / Duration / Associated Topic
+
+3. **Select Lives and Sync**
+   - Multi-selection is supported
+   - Click "Start Sync"
+
+4. **Sync Results**
+   - Saved to: `{getTarget}/直播课/{TopicName}/{LiveTitle}.md`
+   - Content structure:
+     ```markdown
+     # Live Title
+     
+     ## 🤖 AI Summary
+     [AI generated summary content]
+     
+     ## 📝 Full Transcript
+     [Full speech-to-text transcript]
+     ```
+   - frontmatter includes:
+     - `source: Get笔记直播转写`
+     - `live_id`: Live ID
+     - `speaker`: Speaker
+     - `duration`: Duration
+     - `audio_url`: Original audio URL (referenced only, not downloaded)
+     - `tags: ["直播转写"]`
+
+##### Attachment Handling
+
+1. **Shared Attachment Directory**
+   - Attachments from all channels are saved under `{getTarget}/get attachment/`
+   - OpenAPI channel organizes subdirectories by noteId
+   - e.g., `get/get attachment/7234567890/image-01.png`
+   - *Note: In OpenAPI mode, the name of the folder for knowledge bases, blogger contents, live transcripts, or attachments can be fully customized in the settings tab.*
+
+2. **Attachment Type Filtering**
+   - Reuses configurations in "Attachment Import Settings"
+   - Selectively import Images/Audio/Video/Documents
+
+##### Progress and Error Handling
+
+1. **Sync Progress Display**
+   - Status bar displays: `Get Knowledge Base Sync: {Topic 1/N} - {Note 12/345}`
+   - Or: `Get Blogger Sync: {Blogger 2/5} - {Content 8/30}`
+
+2. **Error Handling**
+   - Failure of a single topic/blogger does not affect others
+   - Final summary displays: Success X / Failed Y
+   - Failed items are detailed in sync history
+
+3. **Cancel Sync**
+   - The "Cancel" button can be clicked at any time during sync
+   - Already written files are preserved, no rollbacks
+
+##### Sync History
+
+1. **View Historical Records**
+   - Click "View Full History" in settings
+   - Displays the last 20 sync records
+
+2. **History Record Content**
+   - Channel type: Personal Note / Knowledge Base / Blogger / Live
+   - Time, duration, status
+   - Created / Updated / Skipped / Failed counts
+   - Error messages (if any)
+
+##### Best Practices
+
+**✅ Recommended**:
+- Select a small number of knowledge bases to test for the first sync
+- Regularly sync knowledge base and blogger content to keep local up to date
+- Use the semantic search feature to quickly locate knowledge base contents
+- Enable "Multi-level Directory Tree" to keep notes organized clearly
+
+**⚠️ Notes**:
+- Knowledge base and blogger sync do not support automatic scheduling (manual trigger only)
+- The first sync performs a full overwrite and does not perform incremental pre-checks
+- Blogger contents usually do not contain attachments
+- Live audio files will not be downloaded, only URL references are preserved
+
+### Data Management
+
+#### Reset Sync History
+
+If you need to completely re-import all notes:
+
+1. Click "Reset Sync History" in settings
+2. Confirm the action
+3. Delete old note folders (such as `get/notes/`, `get/知识库/`, etc.)
+4. Execute the sync again
+
+> ⚠️ **Warning**: This action will clear all sync records, which may cause duplicate imports during next sync. Backing up important data beforehand is highly recommended.
+
+#### Cleanup Legacy memo@ Notes
+
+If your notes were imported using versions older than 3.3.0 and you upgraded without resetting sync history, you might have many files with `memo@` prefix naming style in your notes directory.
+
+This plugin provides a one-click cleanup tool to help you safely migrate to the new unified naming convention (using the note title directly as the filename):
+
+1. Open plugin settings → Scroll to the very bottom to find **Advanced Data Management**.
+2. Click the **Scan and Clean** button under the "Cleanup Legacy memo@ Notes" section.
+3. The system will automatically scan your local directory for legacy-prefixed notes and display a preview.
+4. Confirm to safely move these outdated files to your system trash (safe, secure, and fully recoverable).
+
+> 💡 **Tip**: Before running this cleanup, make sure you have executed a successful sync under the current version (using OpenAPI or ZIP channels) so that all your memos already have corresponding, standard-named markdown files created.
+
 
 ---
 
@@ -184,23 +725,61 @@ After sync, your vault will have:
 
 ```
 Your Vault/
-├── get/                          # Main folder (customizable)
-│   ├── memos/                    # Memo subfolder
-│   │   ├── 2024-01-15/          # Grouped by date
-│   │   │   ├── memo@title_1.md
-│   │   │   ├── memo@title_2.md
+├── get/                              # Main folder (customizable)
+│   ├── notes/                        # Personal notes (customizable)
+│   │   ├── 2024-01-15/              # Grouped by date
+│   │   │   ├── Meeting Notes.md
+│   │   │   ├── Project Plan.md
+│   │   │   ├── Meeting Notes (2).md  # Auto-suffix for duplicates
 │   │   │   └── ...
 │   │   └── ...
-│   ├── get attachment/          # Attachments (new v2.0 structure)
+│   ├── 知识库/                       # Owned knowledge bases (OpenAPI)
+│   │   ├── Frontend Learning/
+│   │   │   ├── React Hooks Deep Dive.md
+│   │   │   ├── Vue3 Reactivity.md
+│   │   │   └── ...
+│   │   └── ...
+│   ├── 订阅知识库/                   # Subscribed knowledge bases (OpenAPI)
+│   │   ├── Team Public/
+│   │   │   ├── RAG Practice.md
+│   │   │   └── ...
+│   │   └── ...
+│   ├── 订阅博主/                     # Subscribed bloggers (OpenAPI)
+│   │   ├── Douyin_SomeBlogger/
+│   │   │   ├── Talking about RAG.md
+│   │   │   └── ...
+│   │   ├── WeChat_AnotherBlogger/
+│   │   │   └── ...
+│   │   └── ...
+│   ├── 直播课/                       # Live transcripts (OpenAPI)
+│   │   ├── Frontend Architecture/
+│   │   │   ├── From Monolith to Micro-frontends.md
+│   │   │   └── ...
+│   │   └── ...
+│   ├── get attachment/              # Attachments (unified)
+│   │   ├── 7234567890/             # OpenAPI: grouped by noteId
+│   │   │   ├── image-01.png
+│   │   │   ├── audio-01.mp3
+│   │   │   └── ...
+│   │   ├── abc123def.jpg           # ZIP channel: hash filename (flat)
+│   │   └── ...
+│   ├── _remote_deleted/            # Remote deletion archive (optional)
 │   │   ├── 2024-01-15/
-│   │   │   ├── image1.jpg
-│   │   │   ├── audio.m4a
 │   │   │   └── ...
 │   │   └── ...
-│   ├── Get Moments.md           # Timeline file (optional)
-│   └── Get Canvas.canvas        # Canvas file (optional)
+│   ├── Get Moments.md              # Timeline file (optional)
+│   └── Get Canvas.canvas           # Canvas file (optional)
 └── ...
 ```
+
+**Directory Descriptions**:
+- **notes/**: Personal notes, filenames use note titles directly (V3.3+ unified naming)
+- **知识库/**: Owned knowledge base notes, organized by topics
+- **订阅知识库/**: Subscribed external knowledge bases
+- **订阅博主/**: Followed creator content, organized by `{platform}_{account}`
+- **直播课/**: AI-transcribed live content
+- **get attachment/**: Shared by all channels, OpenAPI uses subdirectories, ZIP uses flat files
+- **_remote_deleted/**: Archive for remotely deleted notes (when archive policy enabled)
 
 ---
 
@@ -249,6 +828,11 @@ get-to-obsidian/
 │   └── ui/                    # User interface
 │       ├── auth_ui.ts         # Login UI
 │       ├── main_ui.ts         # Main UI
+│       ├── settings_tab.ts    # Native Settings Tab (V3.6.0+ Separation)
+│       ├── semantic_search_view.ts # Semantic Search Sidebar (V3.4.0+ RAG)
+│       ├── quota_status_view.ts # Quota Visual Status Panel (V3.7.0+ Quota)
+│       ├── sync_history_ui.ts # Sync History Records UI
+│       ├── manualsync_ui.ts   # Manual Import UI
 │       └── ...
 ├── main.ts                    # Plugin entry point
 ├── manifest.json              # Plugin manifest
@@ -304,6 +888,66 @@ npx playwright@1.43.1 install
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
 npx playwright@1.43.1 install
 ```
+
+### Canvas or Moments not displaying
+
+**Problem**: Visual files are generated after enabling, but they are empty.
+
+**Solution**:
+1. Verify that at least one note has been successfully imported.
+2. Check if the file path settings are correct.
+3. Try toggling the visualization options off and back on.
+4. Delete the old Canvas/Moments files and sync again.
+
+### Attachments not imported
+
+**Problem**: Images, audio, or other attachments in notes are not imported.
+
+**Possible reasons**:
+1. The attachment type is not enabled in settings.
+2. The attachment file is corrupted or path is invalid.
+3. Insufficient disk space.
+
+**Solution**:
+1. Open plugin settings → Advanced Options → Attachment Import Settings.
+2. Verify that the required attachment types are checked.
+3. Check the console logs (`Ctrl/Cmd + Shift + I`) for specific errors.
+4. Check remaining disk space.
+
+**View Import Statistics**:
+Upon sync completion, the console will display detailed attachment statistics:
+```
+Attachment stats - Total: 45, Images: 30, Audio: 10, Videos: 3, Documents: 2, Failed: 0
+```
+
+### Large file import failure or memory issues
+
+**Problem**: Crashes or memory errors occur when importing large ZIP files.
+
+**Solution**:
+1. **Desktop**: The plugin automatically uses the raw file path, so memory is not an issue.
+2. **Mobile**: The plugin automatically falls back to the streaming temporary file strategy, but ensure you have enough temporary storage space.
+3. Check console logs to confirm the strategy used:
+   - `使用直接路径策略` (Using direct path strategy) - Desktop optimized strategy (Best).
+   - `使用临时文件回退策略` (Using temporary file fallback strategy) - True streaming write strategy.
+4. If it still fails, try exporting and importing in smaller batches.
+5. For local vaults, attachment copying uses native `fs.copyFile` for optimal performance.
+
+### Upgrading from older versions
+
+If you are upgrading from a 1.x version to 2.0+, the attachment path structure has changed:
+
+**Option A: Clean Re-import (Recommended)**
+1. Open plugin settings.
+2. Click "Reset Sync History".
+3. Delete old folders: `get/memos/` and `get picture/`.
+4. Sync again.
+
+**Option B: Keep Existing Memos**
+1. Sync normally.
+2. New memos will use the new attachment structure.
+3. Old memos will keep their old paths.
+4. Outcome: A mixed structure, but works without errors.
 
 ---
 
