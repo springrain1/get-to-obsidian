@@ -3,7 +3,94 @@
 All notable changes to the Get笔记 Importer plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
+
+## [3.7.0] - 2026-05-22
+
+### Added
+- 📊 **Global Quota Manager**: Unified management of OpenAPI read/write/write_note quotas, all modules share quota state to avoid duplicate queries and inconsistencies
+- 📈 **Quota Visualization Panel**: Real-time display of remaining quotas (daily/monthly) in main interface and sidebar, automatic warnings when below threshold, countdown display when quota exhausted
+- 🔔 **Quota Circuit Breaker**: Automatically disables related features when API quota exhausted error (10203) is received, avoiding forced interruption at worst timing
+
+### Fixed
+- 🐛 **Empty Folder Creation**: Fixed issue where empty folders were created in certain situations, optimized directory structure management
+- 🐛 **OpenAPI Call Count Statistics**: Fixed inaccurate quota consumption tracking, now every API call is correctly recorded and updates global quota state
+
+---
+
+## [3.6.0] - 2026-05-21
+
+### Changed
+- 🎨 **"Static-Dynamic Separation" Architecture Refactor**: Migrated persistent configurations (API keys, preferences, folder mappings) to native plugin settings tab, Modal popups now serve only as interactive task executors
+- ⚙️ **Settings Panel Optimization**: Configuration items grouped by function (Basic Settings, OpenAPI Config, Bidirectional Sync, Visualization Options, Advanced Options), improving user experience and maintainability
+- 🔧 **UI Interaction Improvements**: Main panel focuses on sync operations and status display, all configuration management unified in settings tab
+
+---
+
+## [3.5.0] - 2026-05-20
+
+### Added
+- 🔄 **OpenAPI Bidirectional Sync**: Support pushing notes created/modified/deleted in Obsidian to Get Notes cloud, achieving true bidirectional synchronization
+- 🖼️ **Image Note Upload**: Automatically recognizes local images in Markdown, uploads via OSS to create img_text type notes, supports global SHA-256 deduplication to avoid duplicate uploads
+- 🗑️ **Remote Deletion Sync**: Detects notes deleted on cloud through lightweight full ID fetch, handles local copies according to user policy (notify/trash/archive)
+- 🌳 **Parent-Child Note Relationships**: Supports bidirectional mapping between local folder hierarchy and cloud parent_id, maintaining consistent note organization structure
+- 🔀 **Conflict Merge UI**: Provides three-column comparison interface (local/remote/merge result), users can interactively resolve sync conflicts
+- 🏷️ **Tag Differential Push**: Only pushes changed tags (add/delete), reducing API call volume
+- ⚙️ **Flexible Trigger Modes**: Supports manual trigger, auto-sync on save, and scheduled sync modes
+- 🔐 **Conflict Strategy Configuration**: Supports four strategies: local priority, remote priority, mark conflict, interactive merge
+
+### Fixed
+- 🐛 **Authorization Header Compliance**: Fixed Authorization header format, uses raw API Key per official documentation (configurable whether to add Bearer prefix)
+
+---
+
+## [3.4.0] - 2026-05-19
+
+### Added
+- 🔍 **OpenAPI Semantic Search (RAG)**: Integrated Get Notes cloud vector semantic search capability, supports global recall and knowledge base recall
+- 📌 **Sidebar Search Panel**: Persistent sidebar displays cloud content related to current note, supports real-time follow mode
+- ✏️ **Text Selection Search**: Quickly trigger semantic search after selecting text, find related notes, blogger content, live transcripts
+- 🎯 **Smart Result Display**: Distinguishes between locally existing notes (open directly) and cloud-only content (preview Modal), supports one-click sync to local
+- 📊 **Knowledge Base Scope Filter**: Can choose to search globally or within specified knowledge base, precisely locate relevant content
+- ⚡ **Real-time Follow Mode**: Automatically displays related cloud content as reference material when editing notes (configurable debounce time)
+- 🎨 **Type Badges**: Result list displays note types (personal note/blogger content/live transcript/Dedao ebook/external webpage)
+
+---
+
+## [3.3.0] - 2026-05-18
+
+### Added
+- 🚀 **OpenAPI Sync Channel**: New sync method based on Get Open Platform REST API, coexists with traditional Playwright + ZIP export channel
+- 🔑 **OpenAPI Credential Management**: Support configuring Client ID and API Key, provides connection test functionality
+- 📚 **Knowledge Base Sync**: Support syncing owned knowledge bases and subscribed external knowledge bases, organized by topic dimension
+- 👥 **Subscribed Blogger Sync**: Fetch content published by followed creators (Douyin, WeChat, Dedao, etc.) to local
+- 🎙️ **Live Transcript Sync**: Sync AI-transcribed live content (including AI summary and full transcript text)
+- 🌳 **Multi-level Parent-Child Directory Tree**: Restore cloud note nesting relationships as local physical folder hierarchy (optional)
+- 🔄 **Dual Channel Coexistence**: Users can switch between Playwright mode and OpenAPI mode, both channels share directory structure and incremental records
+- 📱 **Mobile Support**: OpenAPI channel uses Obsidian built-in APIs throughout, perfectly supports mobile (Playwright mode still desktop-only)
+- 🎯 **Unified Naming Convention**: Adopts Obsidian community best practices, filenames directly use note titles, duplicate conflicts use ` (2)` ` (3)` suffixes
+- 📎 **Attachments Grouped by noteId**: OpenAPI channel attachments organized into subdirectories by note ID for easy management
+- ⚙️ **Incremental Sync Strategy**: Supports full and incremental sync strategies, incremental mode intelligently determines updates through uid and modified timestamp
+- 🔒 **Sync Lock Mechanism**: Ensures only one sync task runs at a time, avoiding concurrent conflicts
+- 📊 **Sync History Records**: Records last 20 sync results (success/failure, duration, created/updated counts), convenient for troubleshooting
+- 🚫 **Cancellation Mechanism**: Support interrupting sync in progress anytime, immediately stops network requests and file writes
+
+### Changed
+- 📁 **Directory Structure Optimization**:
+  - Personal notes: `{getTarget}/{memoTarget}/{YYYY-MM-DD}/{title}.md`
+  - Knowledge base: `{getTarget}/知识库/{topicName}/{title}.md`
+  - Subscribed knowledge base: `{getTarget}/订阅知识库/{topicName}/{title}.md`
+  - Subscribed blogger: `{getTarget}/订阅博主/{platform}_{accountName}/{title}.md`
+  - Live courses: `{getTarget}/直播课/{topicName}/{title}.md`
+- 🏷️ **Tag Normalization**: Unified tag cleaning rules (spaces to underscores, special character escaping, numeric-only prefix), consistent with ZIP channel
+- 📄 **YAML Field Extensions**: frontmatter adds `note_type` (note type), `topic_id` (topic ID), `topic_name` (topic name) and other fields
+
+### Fixed
+- 🐛 **Large File Handling**: Desktop prioritizes original path, mobile automatically uses streaming temp file, avoiding memory usage
+- 🐛 **Path Conflict Detection**: Precisely determines if same note through uid, avoiding mistaken overwrite of different notes
+- 🐛 **Timestamp Comparison**: Unified conversion to millisecond timestamps before comparison, avoiding judgment errors from string comparison
+
+---
 
 ## [3.2.0] - 2026-05-17
 
