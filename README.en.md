@@ -1,8 +1,8 @@
-# 📓 Get笔记 Importer for Obsidian
+# 📓 得到大脑（原Get笔记） Importer for Obsidian
 
 <div align="center">
 
-A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content into Obsidian with incremental sync, auto-sync, and multiple visualization options.
+A plugin to sync your [得到大脑（原Get笔记）](https://www.biji.com/) (Get Notes) content into Obsidian with incremental sync, auto-sync, and multiple visualization options.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Obsidian](https://img.shields.io/badge/Obsidian-0.15.0+-purple)](https://obsidian.md/)
@@ -15,27 +15,60 @@ A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content int
 
 ---
 
-## 🎉 Version 3.7.0 Latest Update
+## 🎉 Version 3.9.0 Latest Update
 
-### ✨ New Features
+### 🚀 Web Private API Full Channel Sync
+- **Fast Pull & Incremental Updates**: A boon for non-PRO users! Supports fully pulling personal cloud notes, auto-recording cursors for incremental syncs, and optional native Markdown export for maximum fidelity.
+- **Rapid Single Note Push**: Instantly push the currently active note directly to the cloud with a single click in the editor.
+- **Advanced Markdown Renderer**: Built-in custom rendering engine that perfectly parses Obsidian syntax (highlights, math formulas, task lists) and auto-uploads local images to the Get Notes cloud format.
 
-- **📊 Global Quota Manager**: Unified management of OpenAPI read/write/write_note quotas, all modules share quota state to avoid duplicate queries and inconsistencies
-- **📈 Quota Visualization Panel**: Real-time display of remaining quotas (daily/monthly) in main interface and sidebar, automatic warnings when below threshold, countdown display when quota exhausted
-- **🔔 Quota Circuit Breaker**: Automatically disables related features when API quota exhausted error is received, avoiding forced interruption at worst timing
-
-### 🔧 Improvements
-
-- **🎨 "Static-Dynamic Separation" Architecture Refactor**: Migrated persistent configurations to native plugin settings tab, Modal popups now serve only as interactive task executors
-- **⚙️ Settings Panel Optimization**: Configuration items grouped by function, improving user experience and maintainability
-
-### 🐛 Bug Fixes
-
-- **Empty Folder Creation**: Fixed issue where empty folders were created in certain situations
-- **OpenAPI Call Count Statistics**: Fixed inaccurate quota consumption tracking
+### 🎨 UI Experience & UX Refactoring
+- **Settings Panel Tab Refactoring**: Completely overhauled the long single-page settings into a modern Tab structure, divided into "Sync & Pull", "Push & Bidirectional", "Advanced Options", and "License" sections.
+- **Editor Foundation Enhancements**: Brought in CodeMirror extension dependencies to achieve seamless hiding of bidirectional sync markers (e.g. `<!-- getnote:content:start -->`) in reading and Live Preview modes.
+- **Full Multilingual (i18n) Support**: Rebuilt the plugin with a comprehensive bilingual architecture. The plugin now 100% supports a seamless English environment, automatically detecting the system language to translate all settings, modals, commands, and prompts.
 
 ---
 
 ## 📋 Version History Highlights
+
+### V3.8.0 - Bidirectional Sync Safety Boundary
+
+
+- **Writable Body Region**: OpenAPI downstream notes use `<!-- getnote:content:start -->` to `<!-- getnote:content:end -->` as the only body region that can be uploaded back to the cloud
+- **Scoped Writable Fields**: Upstream sync only writes Get Notes editable fields: `title`, `content`, and `tags`; transcripts, attachments, sources, references, and generated sections remain read-only local display content
+- **Hash Baseline Alignment**: Local change detection is based on the writable body region plus tags, avoiding false local-change detection caused by downstream-rendered transcripts or attachments
+
+### 🛡️ Safety Fixes
+
+- **Cloud Content Pollution Prevention**: Prevents the full generated Markdown from being written back into Get `content`
+- **Conflict File Skip Rules**: `.conflict-*`, `conflict_type: bidirectional_sync`, and `remote_uid` files are not uploaded as new notes
+- **Merge Files Do Not Upload**: Merge-by-date files with `uids` are used for downstream reading and incremental deduplication only, not upstream sync
+- **Unsafe Setting Combination Guard**: Blocks `mergeByDate + save-trigger bidirectional upload`
+
+---
+
+## 📋 Version History Highlights
+
+### V3.8.0 - Bidirectional Sync Safety Boundary
+- 🔄 Writable body region: only content inside the boundary is uploaded back to Get `content`
+- 🛡️ Pollution prevention: transcripts, attachments, sources, references, and generated sections are not uploaded as full Markdown
+- 📅 Read-only merge files: merge-by-date files do not upload, and save-trigger upload is incompatible with merge-by-date
+- ⚔️ Conflict files skipped: conflict copies are not created as new cloud notes
+
+### V3.7.0 - Global Quota Management and Mobile Loading Fix
+
+#### New Features
+- 📊 **Global Quota Manager**: Unified management of OpenAPI read/write/write_note quotas, all modules share quota state to avoid duplicate queries and inconsistencies
+- 📈 **Quota Visualization Panel**: Real-time display of remaining quotas (daily/monthly) in main interface and sidebar, automatic warnings when below threshold, countdown display when quota exhausted
+- 🔔 **Quota Circuit Breaker**: Automatically disables related features when quota exhausted error is received, avoiding forced interruption at worst timing
+
+#### Improvements
+- 🎨 **"Static-Dynamic Separation" Architecture Refactor**: Migrated persistent configurations to native plugin settings tab, Modal popups now serve only as interactive task executors
+- ⚙️ **Settings Panel Optimization**: Configuration items grouped by function, improving user experience and maintainability
+
+#### Bug Fixes
+- 🐛 **Empty Folder Creation**: Fixed issue where empty folders were created in certain situations
+- 🐛 **OpenAPI Call Count Statistics**: Fixed inaccurate quota consumption tracking
 
 ### V3.6.0 - Configuration Management Refactor
 - 🎨 "Static-Dynamic Separation" architecture: persistent configs migrated to settings tab
@@ -78,7 +111,7 @@ A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content int
 
 ### OpenAPI Advanced Features
 
-- 🔄 **Bidirectional Sync**: True bidirectional sync between Obsidian ↔ Get Notes, support pushing local created/modified/deleted notes to cloud
+- 🔄 **Bidirectional Sync**: Sync Obsidian titles, tags, and writable body regions back to Get Notes; transcripts, attachments, sources, and other generated sections remain read-only display content
 - 📚 **Knowledge Base Sync**: Sync owned knowledge bases and subscribed external knowledge bases, organized by topic dimension
 - 👥 **Subscribed Blogger Sync**: Fetch content published by followed creators (Douyin, WeChat, Dedao, etc.) to local
 - 🎙️ **Live Transcript Sync**: Sync AI-transcribed live content (including AI summary and full transcript text)
@@ -183,7 +216,7 @@ cp deploy.sh deploy.local.sh
 
 1. Restart Obsidian
 2. Go to `Settings` → `Community plugins` → Turn off `Safe mode`
-3. Find `Get笔记 Importer` in installed plugins and enable it
+3. Find `得到大脑（原Get笔记） Importer` in installed plugins and enable it
 
 ---
 
@@ -193,10 +226,10 @@ cp deploy.sh deploy.local.sh
 
 #### Step 1: Open Plugin Interface
 - Click the notebook icon 📓 in the sidebar
-- Or use command palette: `Ctrl/Cmd + P` → Type `Get笔记`
+- Or use command palette: `Ctrl/Cmd + P` → Type `得到大脑（原Get笔记）`
 
-#### Step 2: Login to Get笔记
-1. Click "Login to Get笔记 Account"
+#### Step 2: Login to 得到大脑（原Get笔记）
+1. Click "Login to 得到大脑（原Get笔记） Account"
 2. In the browser window that opens:
    - Enter your phone number
    - Click "Get Verification Code" manually
@@ -224,7 +257,7 @@ cp deploy.sh deploy.local.sh
 
 #### Manual Sync
 - Click "Sync Now" button
-- Or use command: `Ctrl/Cmd + P` → `Get笔记: Sync Now`
+- Or use command: `Ctrl/Cmd + P` → `得到大脑（原Get笔记）: Sync Now`
 
 ### Experimental Options
 
@@ -239,6 +272,7 @@ cp deploy.sh deploy.local.sh
   - **Auto-Stripping**: During cloud synchronization, the system automatically strips the sub-Frontmatter (YAML block) of appended child notes, ensuring that the merged file contains only a single valid YAML block at the very top.
   - **Metadata Aggregation (uids Array)**: The YAML header of the file adaptively upgrades the single `uid` string to a `uids: ["uid1", "uid2", ...]` array, and updates the `modified` date to reflect the latest modification timestamp.
   - **Index & Incremental Deduplication**: Integrates seamlessly with the local `UidIndex` cache scanner. Secondary incremental synchronization can 100% recognize all synced notes within the merged file, completely avoiding duplicate cloud API requests and maximizing your API quota savings.
+- **Bidirectional Sync Limitation (V3.8.0+)**: Merge-by-date files contain multiple `uids` and are currently used only for downstream reading and incremental deduplication. The uploader skips these files, and the settings UI blocks merge-by-date from being combined with save-trigger bidirectional upload.
 
 ### OpenAPI Advanced Features
 
@@ -557,7 +591,7 @@ Sync the knowledge bases you participate in, the blogger content you subscribe t
    - frontmatter includes:
      - `topic_id`: Topic ID
      - `topic_name`: Topic Name
-     - `source: Get笔记知识库`
+     - `source: 得到大脑（原Get笔记）知识库`
      - `note_type`: Note type
 
 4. **Multi-level Directory Tree (Optional)**
@@ -577,7 +611,7 @@ Sync the knowledge bases you participate in, the blogger content you subscribe t
 3. **Sync Results**
    - Notes are saved to: `{getTarget}/订阅知识库/{TopicName}/{NoteTitle}.md`
    - frontmatter includes:
-     - `source: Get笔记订阅知识库`
+     - `source: 得到大脑（原Get笔记）订阅知识库`
      - `is_subscribed: true`
 
 ##### Syncing Subscribed Blogger Content
@@ -599,7 +633,7 @@ Sync the knowledge bases you participate in, the blogger content you subscribe t
    - e.g., `get/订阅博主/抖音_SomeBlogger/RAG today.md`
    - frontmatter includes:
      - `uid`: post_id_alias
-     - `source: Get笔记订阅博主`
+     - `source: 得到大脑（原Get笔记）订阅博主`
      - `platform`: Platform name
      - `account_name`: Blogger account name
      - `tags: [订阅博主]`
@@ -630,7 +664,7 @@ Sync the knowledge bases you participate in, the blogger content you subscribe t
      [Full speech-to-text transcript]
      ```
    - frontmatter includes:
-     - `source: Get笔记直播转写`
+     - `source: 得到大脑（原Get笔记）直播转写`
      - `live_id`: Live ID
      - `speaker`: Speaker
      - `duration`: Duration
@@ -858,19 +892,19 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical documentation.
 
 **Solution**:
 1. Confirm Playwright is installed: `npx playwright@1.43.1 install`
-2. Check network connection to Get笔记
+2. Check network connection to 得到大脑（原Get笔记）
 3. Manually complete login steps in browser
 4. Wait 10-15 seconds, don't close browser
 
 ### No new notes after sync
 
 **Possible reasons**:
-1. No new notes in Get笔记
+1. No new notes in 得到大脑（原Get笔记）
 2. Notes already synced (incremental sync)
 3. Sync history issue
 
 **Solution**:
-1. Check Get笔记 website for new content
+1. Check 得到大脑（原Get笔记） website for new content
 2. Use "Reset Sync History" to re-import all
 
 ### Playwright installation fails
@@ -989,7 +1023,7 @@ You are free to:
 ## 💖 Acknowledgments
 
 - Thanks to [Obsidian](https://obsidian.md/) for the powerful knowledge management platform
-- Thanks to [Get笔记](https://www.biji.com/) for the note-taking service
+- Thanks to [得到大脑（原Get笔记）](https://www.biji.com/) for the note-taking service
 - Thanks to the original project [jia6y/get-to-obsidian](https://github.com/jia6y/get-to-obsidian)
 - Thanks to all contributors and users
 

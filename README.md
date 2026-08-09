@@ -1,10 +1,10 @@
-# 📓 Get笔记 Importer for Obsidian
+# 📓 得到大脑（原Get笔记） Importer for Obsidian
 
 <div align="center">
 
-A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content into Obsidian with incremental sync, auto-sync, and multiple visualization options.
+A plugin to sync your [得到大脑（原Get笔记）](https://www.biji.com/) (Get Notes) content into Obsidian with incremental sync, auto-sync, and multiple visualization options.
 
-一个将 [Get笔记](https://www.biji.com/) 的内容同步到 Obsidian 的插件。支持增量同步、自动同步和多种可视化方式。
+一个将 [得到大脑（原Get笔记）](https://www.biji.com/) 的内容同步到 Obsidian 的插件。支持增量同步、自动同步和多种可视化方式。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Obsidian](https://img.shields.io/badge/Obsidian-0.15.0+-purple)](https://obsidian.md/)
@@ -17,27 +17,60 @@ A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content int
 
 ---
 
-## 🎉 Version 3.7.0 最新更新
+## 🎉 Version 3.9.0 最新更新
 
-### ✨ 新增功能
+### 🚀 Web 私有 API 全通道同步
+- **极速拉取与增量更新**：非 PRO 用户福音！支持完整拉取个人云端笔记，自动记录游标进行增量同步，可选原生 Markdown 格式导出以保留最高保真度。
+- **单篇极速推送**：在编辑器内点击即可将当前笔记一键推送到云端。
+- **高级 Markdown 渲染器**：内置自定义渲染引擎，自动将 Obsidian 中的高亮、数学公式、任务列表等语法，以及本地图片完美解析并上传至 Get 笔记云端格式。
 
-- **📊 全局配额管理器**：统一管理 OpenAPI 的 read / write / write_note 三类配额，所有模块共享配额状态，避免重复查询和状态不一致
-- **📈 配额可视化面板**：主界面和侧边栏实时显示剩余配额（今日/月度），低于阈值时自动警告，配额耗尽时显示重置倒计时
-- **🔔 配额熔断机制**：收到 API 配额耗尽错误时自动停用相关功能，避免在最坏时机被强制中断
+### 🎨 界面体验与交互重构
+- **设置面板标签页重构**：将冗长的单页设置全面升级为现代化的 Tab 标签页结构，分为“同步与拉取”、“双向与推送”、“高级选项”和“授权”四大板块。
+- **编辑器底层优化**：引入 CodeMirror 扩展依赖，在阅读器和实时预览模式下实现了同步标记（如 `<!-- getnote:content:start -->`）的无感隐藏。
+- **全量国际化（i18n）支持**：全面接入双语字典架构，插件现已 100% 支持纯英文环境无缝切换，包含所有核心设置面板、命令和模态弹窗，自动识别系统语言。
 
-### 🔧 优化改进
+---
 
-- **🎨 "动静分离"架构重构**：将持久配置迁移到系统原生的插件设置选项卡中，弹窗 Modal 仅作为交互式任务执行器
-- **⚙️ 设置面板优化**：配置项按功能分组，提升用户体验和可维护性
+## 📋 历史版本亮点
 
-### 🐛 问题修复
+### V3.8.0 - 双向同步安全边界与配置防呆
 
-- **空文件夹创建问题**：修复了在某些情况下创建空文件夹的问题
-- **OpenAPI 调用次数统计**：修复了配额消耗追踪不准确的问题
+
+- **可写正文区**：OpenAPI 下行笔记使用 `<!-- getnote:content:start -->` 到 `<!-- getnote:content:end -->` 标出唯一会写回云端的正文区域
+- **字段范围收敛**：上行同步只写回 Get 笔记支持的 `title`、`content`、`tags`，转写、附件、来源、引用等派生内容保持本地只读展示
+- **Hash 基线对齐**：本地变更检测基于可写正文区和 tags，避免刚下行生成的转写、附件等内容被误判为本地修改
+
+### 🛡️ 安全修复
+
+- **防止云端正文污染**：避免整篇生成 Markdown 被写回 Get `content`
+- **冲突文件跳过**：`.conflict-*`、`conflict_type: bidirectional_sync`、`remote_uid` 文件不会被上传成新笔记
+- **合并文件不上行**：带 `uids` 的按日期合并文件只用于下行阅读和增量去重，不参与上行同步
+- **配置组合拦截**：禁止 `mergeByDate + 保存时双向上行` 这种不安全组合
 
 ---
 
 ## 📋 版本历史亮点
+
+### V3.8.0 - 双向同步安全边界
+- 🔄 可写正文区：只将边界内正文写回 Get `content`
+- 🛡️ 防污染：转写、附件、来源、引用等派生内容不再被整篇上传污染云端正文
+- 📅 合并文件只读：按日期合并文件不上行，保存时双向上行与按日期合并互斥
+- ⚔️ 冲突文件跳过：冲突副本不会被误创建为云端新笔记
+
+### V3.7.0 - 全局配额管理与移动端加载修复
+
+#### 新增功能
+- 📊 **全局配额管理器**：统一管理 OpenAPI 的 read / write / write_note 三类配额，所有模块共享配额状态，避免重复查询和状态不一致
+- 📈 **配额可视化面板**：主界面和侧边栏实时显示剩余配额（今日/月度），低于阈值时自动警告，配额耗尽时显示重置倒计时
+- 🔔 **配额熔断机制**：收到 API 配额耗尽错误时自动停用相关功能，避免在最坏时机被强制中断
+
+#### 优化改进
+- 🎨 **"动静分离"架构重构**：将持久配置迁移到系统原生的插件设置选项卡中，弹窗 Modal 仅作为交互式任务执行器
+- ⚙️ **设置面板优化**：配置项按功能分组，提升用户体验和可维护性
+
+#### 问题修复
+- 🐛 **空文件夹创建问题**：修复了在某些情况下创建空文件夹的问题
+- 🐛 **OpenAPI 调用次数统计**：修复了配额消耗追踪不准确的问题
 
 ### V3.6.0 - 配置管理重构
 - 🎨 "动静分离"架构：持久配置迁移到插件设置选项卡
@@ -73,7 +106,7 @@ A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content int
 
 - ✅ **双通道同步**：支持传统 Playwright + ZIP 导出和 OpenAPI REST API 两种同步方式
 - ✅ **增量同步**：智能识别已同步的笔记，只导入新增内容，避免重复
-- ✅ **智能更新检测**：自动识别 Get笔记 中修改过的笔记并重新导入
+- ✅ **智能更新检测**：自动识别 得到大脑（原Get笔记） 中修改过的笔记并重新导入
 - ✅ **附件按类型导入**：可选择性导入图片、音频、视频、文档四类附件，灵活控制存储空间
 - ✅ **原文链接提取**：自动提取并保存原文链接到 YAML frontmatter
 - ✅ **多种同步方式**：
@@ -84,7 +117,7 @@ A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content int
 
 ### OpenAPI 高级功能
 
-- 🔄 **双向同步**：Obsidian ↔ Get 笔记真正双向同步，支持本地创建/修改/删除笔记推送到云端
+- 🔄 **双向同步**：支持将 Obsidian 中的标题、tags 和可写正文区同步回 Get 笔记；转写、附件、来源等派生内容保持只读展示
 - 📚 **知识库同步**：同步自有知识库和订阅的外部知识库，按专题维度组织笔记
 - 👥 **订阅博主同步**：抓取关注的创作者（抖音、微信、得到等）发布的内容到本地
 - 🎙️ **直播转写同步**：同步已完成 AI 转写的直播内容（含 AI 摘要和完整转写文本）
@@ -103,7 +136,7 @@ A plugin to sync your [Get笔记](https://www.biji.com/) (Get Notes) content int
 
 ### 传统功能
 
-- 🔗 **双向链接支持**（实验性）：保留 Get笔记 中的 `[[wiki-links]]` 格式
+- 🔗 **双向链接支持**（实验性）：保留 得到大脑（原Get笔记） 中的 `[[wiki-links]]` 格式
 - 📅 **按日期合并笔记**：可选将同一天的笔记合并为一个文件
 - 🖼️ **附件支持**：自动下载并保存图片、音频等附件
 - 📄 **YAML Frontmatter**：元数据以标准 Obsidian 属性格式存储
@@ -192,7 +225,7 @@ cp deploy.sh deploy.local.sh
 
 1. 重启 Obsidian
 2. 进入 `设置` → `第三方插件` → 关闭`安全模式`
-3. 在`已安装插件`中找到 `Get笔记 Importer` 并启用
+3. 在`已安装插件`中找到 `得到大脑（原Get笔记） Importer` 并启用
 
 ### 方式二：使用 BRAT（开发版）
 
@@ -211,11 +244,11 @@ cp deploy.sh deploy.local.sh
 #### 步骤 1：打开插件界面
 
 - 点击左侧边栏的笔记本图标 📓
-- 或使用命令面板：`Ctrl/Cmd + P` → 输入 `Get笔记`
+- 或使用命令面板：`Ctrl/Cmd + P` → 输入 `得到大脑（原Get笔记）`
 
-#### 步骤 2：登录 Get笔记 账号
+#### 步骤 2：登录 得到大脑（原Get笔记） 账号
 
-1. 点击"登录 Get笔记 账号"按钮
+1. 点击"登录 得到大脑（原Get笔记） 账号"按钮
 2. 在弹出的浏览器中：
    - 输入手机号
    - 手动点击"获取验证码"
@@ -259,10 +292,10 @@ cp deploy.sh deploy.local.sh
 
 **方式 1：自动导出导入**
 - 点击插件界面的"立即同步"按钮
-- 或使用快捷命令：`Ctrl/Cmd + P` → `Get笔记: 立即同步`
+- 或使用快捷命令：`Ctrl/Cmd + P` → `得到大脑（原Get笔记）: 立即同步`
 
 **方式 2：手动导入 ZIP 文件**
-1. 在 Get笔记 网页版导出备份（选择 HTML 格式）
+1. 在 得到大脑（原Get笔记） 网页版导出备份（选择 HTML 格式）
 2. 在插件界面选择导出的 ZIP 文件
 3. 点击导入
 
@@ -349,6 +382,7 @@ cp deploy.sh deploy.local.sh
   - **自动剥离**：在云端同步合并时，系统会自动剥离后文追加笔记的子 Frontmatter（YAML 块），保证合并后文件仅在头部有一个合法的 YAML 块。
   - **元数据聚合（uids 数组）**：文件的 YAML 头会自适应地将单值 `uid` 升级为 `uids: ["uid1", "uid2", ...]` 数组，并将最新修改时间反映在 `modified` 中。
   - **索引与增量去重**：完美契合本地 `UidIndex` 缓存扫描。二次增量同步时能 100% 识别合并文件内的所有已同步笔记，彻底避免重复请求云端 API，最大化节省您的调用配额。
+- **双向同步限制 (V3.8.0+)**：按日期合并文件包含多个 `uids`，当前实现只作为下行阅读和增量去重文件；上传器会跳过这类文件，设置页也会阻止按日期合并与“保存文件时”双向上行同时启用。
 
 ### OpenAPI 高级功能使用
 
@@ -432,11 +466,11 @@ cp deploy.sh deploy.local.sh
 ##### 使用方式 4：命令面板快捷检索
 
 1. **当前笔记检索**
-   - `Ctrl/Cmd + P` → `Get笔记: 从当前笔记召回`
+   - `Ctrl/Cmd + P` → `得到大脑（原Get笔记）: 从当前笔记召回`
    - 自动使用当前笔记的标题和摘要作为查询
 
 2. **自定义查询**
-   - `Ctrl/Cmd + P` → `Get笔记: 快速召回`
+   - `Ctrl/Cmd + P` → `得到大脑（原Get笔记）: 快速召回`
    - 弹出输入框，输入查询后显示结果
 
 ##### 知识库范围筛选
@@ -667,7 +701,7 @@ cp deploy.sh deploy.local.sh
    - frontmatter 包含：
      - `topic_id`：专题 ID
      - `topic_name`：专题名称
-     - `source: Get笔记知识库`
+     - `source: 得到大脑（原Get笔记）知识库`
      - `note_type`：笔记类型
 
 4. **多级父子目录树（可选）**
@@ -687,7 +721,7 @@ cp deploy.sh deploy.local.sh
 3. **同步结果**
    - 笔记保存到：`{getTarget}/订阅知识库/{专题名}/{笔记标题}.md`
    - frontmatter 包含：
-     - `source: Get笔记订阅知识库`
+     - `source: 得到大脑（原Get笔记）订阅知识库`
      - `is_subscribed: true`
 
 ##### 同步订阅博主内容
@@ -709,7 +743,7 @@ cp deploy.sh deploy.local.sh
    - 如：`get/订阅博主/抖音_某博主/今天聊聊RAG.md`
    - frontmatter 包含：
      - `uid`：post_id_alias
-     - `source: Get笔记订阅博主`
+     - `source: 得到大脑（原Get笔记）订阅博主`
      - `platform`：平台名称
      - `account_name`：博主账号名
      - `tags: [订阅博主]`
@@ -740,7 +774,7 @@ cp deploy.sh deploy.local.sh
      [完整的语音转文字内容]
      ```
    - frontmatter 包含：
-     - `source: Get笔记直播转写`
+     - `source: 得到大脑（原Get笔记）直播转写`
      - `live_id`：直播 ID
      - `speaker`：主讲人
      - `duration`：时长
@@ -966,7 +1000,7 @@ get-to-obsidian/
 ```
 1. 用户触发同步
    ↓
-2. Playwright 打开浏览器登录 Get笔记
+2. Playwright 打开浏览器登录 得到大脑（原Get笔记）
    ↓
 3. 自动导出数据为 HTML 压缩包
    ↓
@@ -1055,7 +1089,7 @@ git push
 
 **解决**：
 1. 确认已安装 Playwright：`npx playwright@1.43.1 install`
-2. 检查网络连接，确保能访问 Get笔记 官网
+2. 检查网络连接，确保能访问 得到大脑（原Get笔记） 官网
 3. 手动操作登录流程：
    - 输入手机号
    - 点击"获取验证码"
@@ -1068,12 +1102,12 @@ git push
 **问题**：点击同步后提示"新增 0 条笔记"
 
 **可能原因**：
-1. Get笔记 中确实没有新笔记
+1. 得到大脑（原Get笔记） 中确实没有新笔记
 2. 笔记已经在之前同步过（增量同步机制）
 3. 同步记录异常
 
 **解决**：
-1. 检查 Get笔记 网页版，确认是否有新内容
+1. 检查 得到大脑（原Get笔记） 网页版，确认是否有新内容
 2. 如需重新导入所有笔记，使用"重置同步历史"功能
 
 ### Canvas 或 Moments 不显示
@@ -1159,7 +1193,7 @@ npx playwright@1.43.1 install
 
 ## 🤝 贡献
 
-欢迎任何形式的贡献！这是一个**免费开源**项目，希望能帮助更多使用 Get笔记 和 Obsidian 的朋友。
+欢迎任何形式的贡献！这是一个**免费开源**项目，希望能帮助更多使用 得到大脑（原Get笔记） 和 Obsidian 的朋友。
 
 ### 如何贡献
 
@@ -1209,7 +1243,7 @@ npx playwright@1.43.1 install
 ## 💖 致谢
 
 - 感谢 [Obsidian](https://obsidian.md/) 提供强大的知识管理平台
-- 感谢 [Get笔记](https://www.biji.com/) 的优质笔记服务
+- 感谢 [得到大脑（原Get笔记）](https://www.biji.com/) 的优质笔记服务
 - 感谢原始项目 [jia6y/get-to-obsidian](https://github.com/jia6y/get-to-obsidian)
 - 感谢所有贡献者和使用者的支持
 

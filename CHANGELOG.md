@@ -1,9 +1,46 @@
 # Changelog
 
-All notable changes to the Get笔记 Importer plugin will be documented in this file.
+All notable changes to the 得到大脑（原Get笔记） Importer plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
+
+## [3.9.0] - 2026-08-09
+
+### Added
+- 🚀 **Web Private API Sync Channel**: A brand-new synchronization channel tailored for non-PRO users!
+  - **Full & Incremental Pull**: Pull all personal notes seamlessly with optional native Markdown export format.
+  - **Rapid Note Push**: Instantly push the active edited note to the cloud. Includes automatic image uploading to OSS and rewriting local embeds to remote links.
+  - **Web JSON Renderer**: Custom Markdown-to-JSON engine that converts Obsidian syntax (highlights, math blocks, checklists) perfectly into the Get Notes rich editor format.
+- 🎨 **Settings Tab Navigation**: Completely refactored the monolith settings UI into modern tabs (Sync, Push, Advanced, License) for vastly improved usability.
+- 🧩 **CodeMirror Editor Enhancements**: Added `@codemirror/view` dependencies and a new extension to seamlessly hide internal bidirectional sync markers (`<!-- getnote:content:start -->`) in Live Preview.
+- 🌐 **Full i18n Support**: Rebuilt the plugin with a complete bilingual dictionary architecture, now achieving 100% English environment support with seamless automatic language detection for all settings, modals, and commands.
+
+### Changed
+- 🔄 **Core Decoupling**: Deeply separated the synchronization logic and data models between Web and OpenAPI channels (e.g., abstracting `BinaryDownloader`), greatly improving architectural robustness.
+- ⚙️ **Web Authentication UX**: Streamlined Web login operations in settings and added explicit Notice feedback upon successful connection testing.
+
+### Fixed
+- 🐛 **Logout Invalidation Bug**: Fixed a critical issue where the underlying `<webview>` retained Cookies/Sessions after clicking "Logout". A full cache/cookie wipe is now executed upon logout.
+- 🐛 **API Error Resilience**: Enhanced the network error classifier to better detect and handle expired Web tokens; prevented Web API from accidentally polluting payloads with OpenAPI `uid` fields.
+
+---
+
+## [3.8.0] - 2026-05-31
+
+### Changed
+- 🔄 **Scoped Bidirectional Sync Boundary**: Clarified and aligned OpenAPI bidirectional sync with the actual writable data model: only `title`, `content`, and `tags` are uploaded back to Get Notes.
+- 📝 **Writable Content Region**: Downstream OpenAPI notes now treat `<!-- getnote:content:start -->` to `<!-- getnote:content:end -->` as the only editable body region for upstream sync, while transcripts, attachments, sources, references, and generated relationship sections remain read-only local display content.
+- 🧮 **Hash Baseline Alignment**: Local change detection now uses the writable body region plus tags, avoiding false upstream changes caused by rendered transcripts, attachments, or other generated Markdown sections.
+
+### Fixed
+- 🛡️ **Upload Pollution Prevention**: Fixed the risk of uploading the full generated Markdown back into Get `content`, preventing transcripts, attachments, source summaries, and other derived sections from polluting cloud notes.
+- 🚫 **Unified Upload Skip Rules**: Manual upload, timed upload, batch scan, and save-trigger single-file upload now share the same skip rules for merge-by-date aggregate files, conflict files, and conflict copies.
+- 📅 **Merge-by-Date Safety**: Merge-by-date aggregate files with `uids` are treated as read-only for upstream sync and skipped by uploader; duplicate `uid` sections remain skipped instead of being incorrectly counted as updated.
+- ⚔️ **Conflict File Safety**: `.conflict-*` files, files with `conflict_type: bidirectional_sync`, and conflict copies with `remote_uid` are skipped to avoid creating them as new cloud notes.
+- ⚙️ **Unsafe Setting Combination Guard**: Settings now prevent `mergeByDate` from being combined with save-trigger bidirectional upload, matching the implementation boundary that aggregate files do not upload upstream.
+
+---
 
 ## [3.7.0] - 2026-05-22
 
@@ -22,6 +59,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Metadata uids Array Aggregation**: Adaptively upgrades a single string `uid` inside the YAML header to a `uids: ["uid1", "uid2", ...]` array, updating `modified` timestamp dynamically
   - **UidIndex Compatibility Enhancement**: Local caching now supports reverse mapping for `uids` array. Second-round incremental checks can 100% locate all synced notes inside merged files, **completely preventing redundant cloud API calls and saving API search quotas**
 - 🐛 **ZIP Importer Multi-Links Bug**: Upgraded `.replace` to `.replaceAll` in ZIP local import to ensure all bi-directional links inside a single card are successfully restored
+- 📱 **Obsidian Mobile Loading Fix & Bundling Size Optimization**:
+  - **Complete Removal of Top-Level Static Imports**: Refactored `const.ts`, `importer.ts`, `auth.ts`, `exporter.ts`, `main_ui.ts` to convert static `path`, `os`, `fs-extra`, `playwright`, and `decompress` imports into **platform-guarded lazy-loaded functions**.
+  - **Extreme esbuild External Configuration**: Declared all physical and NodeJS libraries as external in `esbuild.config.mjs`. **The bundle size of main.js plummeted from 4.0MB to 963.9KB (a reduction of 4x!)**, with build speed optimized to **42ms**.
+  - **Graceful Cross-Platform Degradation**: Fully resolved mobile-side (iOS/Android/iPadOS) plugin failures caused by static `require("fs")` safety intercepts. The plugin now loads instantly on mobile with OpenAPI and RAG features fully available, while local ZIP imports and Playwright continue to operate perfectly on desktops.
 
 ---
 
@@ -150,7 +191,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🎉 Major Release - Complete Rebranding
 
-This is a major release with complete rebranding from "flomo" to "Get笔记" and significant UI improvements.
+This is a major release with complete rebranding from "flomo" to "得到大脑（原Get笔记）" and significant UI improvements.
 
 ### Added
 - ✨ **New UI Design**: Complete redesign of plugin interface with modern, organized sections
@@ -165,7 +206,7 @@ This is a major release with complete rebranding from "flomo" to "Get笔记" and
 - ✨ **English Documentation**: Added README.en.md for international users
 
 ### Changed
-- 🔄 **Global Rename**: All "flomo" references changed to "Get" or "Get笔记"
+- 🔄 **Global Rename**: All "flomo" references changed to "Get" or "得到大脑（原Get笔记）"
   - Directory: `lib/flomo/` → `lib/get/`
   - Classes: `FlomoImporter` → `GetImporter`, `FlomoCore` → `GetCore`, etc.
   - Settings: `flomoTarget` → `getTarget`
@@ -210,7 +251,7 @@ This is a major release with complete rebranding from "flomo" to "Get笔记" and
 ### Migration Notes
 
 **Upgrading from 1.x:**
-- The plugin has been completely rebranded to "Get笔记"
+- The plugin has been completely rebranded to "得到大脑（原Get笔记）"
 - All functionality remains the same
 - Settings will be automatically migrated
 - No action required for existing users
@@ -228,7 +269,7 @@ This is a major release with complete rebranding from "flomo" to "Get笔记" and
 - 📁 **Simplified Attachment Structure**:
   - Old: `get picture/file/2025-11-03/4852/filename.m4a`
   - New: `get attachment/2025-11-03/filename.m4a`
-- ⚙️ **Dynamic Path Configuration**: Attachment paths now respect "Get笔记 Home" setting
+- ⚙️ **Dynamic Path Configuration**: Attachment paths now respect "得到大脑（原Get笔记） Home" setting
 
 ### Fixed
 - 🐛 **Attachment Reference Updates**: Fixed regex to match all `![text]()` patterns
