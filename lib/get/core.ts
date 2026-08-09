@@ -345,7 +345,6 @@ export class GetCore {
 
             // Skip if already synced
             if (this.syncedMemoIds.includes(noteId)) {
-                console.log(`笔记已同步，跳过: ${noteId}`);
                 continue;
             }
 

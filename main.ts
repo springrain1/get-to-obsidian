@@ -1,8 +1,8 @@
-import { addIcon, Plugin, Modal, Notice, ButtonComponent } from 'obsidian';
+import { addIcon, Plugin, Notice, ButtonComponent } from 'obsidian';
 import { MainUI } from './lib/ui/main_ui';
-import { GetImporter } from './lib/get/importer';
+import {  } from './lib/get/importer';
 import * as fs from 'fs-extra';
-import { AUTH_FILE, DOWNLOAD_FILE } from './lib/get/const';
+import {  } from './lib/get/const';
 
 const GET_NOTES_ICON = '<svg xmlns="http://www.w3.org/2000/svg" ' +
 	'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
@@ -92,7 +92,7 @@ export default class GetImporterPlugin extends Plugin {
 		// 启动时自动同步
 		if (this.settings.autoSyncOnStartup) {
 			// 等待 2 秒让 Obsidian 完全加载
-			setTimeout(async () => {
+			window.setTimeout(async () => {
 				await this.syncGet();
 			}, 2000);
 		}
@@ -145,7 +145,7 @@ export default class GetImporterPlugin extends Plugin {
 	async syncGet() {
 		try {
 			// 使用 mainUI 的 onSync 方法进行同步
-			const syncBtn = new ButtonComponent(document.createElement('div'));
+			const syncBtn = new ButtonComponent(createEl('div'));
 			await this.mainUI.onSync(syncBtn);
 
 			// 更新最后同步时间

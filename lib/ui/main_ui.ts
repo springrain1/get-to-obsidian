@@ -6,8 +6,8 @@ import { GetImporter } from '../get/importer';
 import { GetExporter } from '../get/exporter';
 import type GetImporterPlugin from '../../main';
 
+import * as fs from 'fs-extra';
 import * as path from 'path';
-import *  as fs from 'fs-extra';
 
 import { AUTH_FILE, DOWNLOAD_FILE } from '../get/const'
 
@@ -53,7 +53,6 @@ export class MainUI extends Modal {
                 authUI.open();
             }
         } catch (err) {
-            console.log(err);
             btn.setButtonText("Auto Sync 🤗");
             new Notice(`Get笔记 同步错误. 详情:\n${err}`);
         }
@@ -116,7 +115,6 @@ export class MainUI extends Modal {
         } catch (err) {
             this.rawPath = "";
             this.selectedFile = null;
-            console.log(err);
             new Notice(`Get笔记 导入错误. 详情:\n${err}`);
         }
     }
@@ -166,13 +164,11 @@ export class MainUI extends Modal {
         const tempPath = path.join(GET_CACHE_LOC, 'manual_import.zip');
         await fs.mkdirp(GET_CACHE_LOC);
 
-        console.log(`ZIP 文件信息: 名称=${file.name}, 大小=${file.size} bytes, path 可用=${!!file.path}`);
 
         // 优先尝试使用直接路径（桌面端）
         if (file.path) {
             try {
                 await fs.access(file.path, fs.constants.R_OK);
-                console.log(`使用直接路径策略: ${file.path}`);
                 return {
                     path: file.path,
                     needsCleanup: false,
@@ -182,13 +178,11 @@ export class MainUI extends Modal {
                 console.warn(`路径不可用回退: ${file.path}`, error);
             }
         } else {
-            console.log('路径不可用回退: file.path 不存在，使用临时文件策略');
         }
 
         // 回退：使用真流式写入临时文件
         try {
             await this.streamFileToTempPath(file, tempPath);
-            console.log(`使用临时文件回退策略: ${tempPath}`);
             return {
                 path: tempPath,
                 needsCleanup: true,
@@ -233,9 +227,7 @@ export class MainUI extends Modal {
                 this.rawPath = file.path || "";
                 // 同时保存 File 对象作为备用（path 不可用时走 arrayBuffer 回退）
                 this.selectedFile = files[0];
-                console.log("选择的文件:", file.name, "路径:", this.rawPath);
                 if (!this.rawPath) {
-                    console.log("path 不可用，将使用 FileReader 方式读取文件");
                 }
             }
         };
@@ -439,7 +431,7 @@ export class MainUI extends Modal {
                     .onClick(async () => {
                         const getTarget = this.plugin.settings.getTarget || "get";
                         const memoTarget = this.plugin.settings.memoTarget || "notes";
-                        const confirmed = confirm(
+                        const confirmed = window.confirm(
                             `确定要重置同步历史吗？\n\n` +
                             `这将清除 ${this.plugin.settings.syncedMemoIds?.length || 0} 条已同步的笔记记录。\n` +
                             `下次同步时将重新导入所有 Get笔记。\n\n` +

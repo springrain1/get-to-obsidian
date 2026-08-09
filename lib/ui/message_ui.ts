@@ -1,4 +1,4 @@
-import { App, Modal, Plugin, Setting, Notice } from 'obsidian';
+import { App, Modal, Setting, } from 'obsidian';
 
 
 export class MessageUI extends Modal {

@@ -1,6 +1,5 @@
+import * as fs from 'fs-extra';
 import * as path from 'path';
-import *  as fs from 'fs-extra';
-
 import { App } from 'obsidian';
 import decompress from 'decompress';
 import * as parse5 from "parse5"
@@ -119,7 +118,7 @@ export class GetImporter {
 
             // 标题中可能含有 / \ : 等路径非法字符（如 "2026/4/12"），需要先做清理
             const safeTitle = (memo["title"] || 'untitled')
-                .replace(/[\/\\:*?"<>|]/g, '-')  // 替换路径非法字符
+                .replace(/[/\\:*?"<>|]/g, '-')  // 替换路径非法字符
                 .replace(/\s+/g, ' ')             // 合并多余空格
                 .trim();
 
@@ -286,8 +285,6 @@ export class GetImporter {
                 }
 
                 if (attachmentDirCreated) {
-                    console.log(`附件复制完成 - 成功: ${attachmentStats.total}, 失败: ${attachmentStats.failed}`);
-                    console.log(`  图片: ${attachmentStats.image}, 音频: ${attachmentStats.audio}, 视频: ${attachmentStats.video}, 文档: ${attachmentStats.document}`);
                 } else {
                     console.debug(`所有附件复制均失败，未创建目录`);
                 }
@@ -298,13 +295,10 @@ export class GetImporter {
 
         // 6. Import Notes
         const syncedMemoIds = this.config["syncedMemoIds"] || [];
-        console.log(`开始导入笔记 - 已有 ${syncedMemoIds.length} 条同步记录`);
 
         // 传递 Map 和已复制的附件列表给 GetCore
         const flomo = new GetCore(notesData, syncedMemoIds, getTarget, copiedAttachments);
 
-        console.log(`导入完成 - 总笔记数: ${notesData.size}, 新增笔记数: ${flomo.newMemosCount}`);
-        console.log(`附件统计 - 总计: ${attachmentStats.total}, 图片: ${attachmentStats.image}, 音频: ${attachmentStats.audio}, 视频: ${attachmentStats.video}, 文档: ${attachmentStats.document}, 失败: ${attachmentStats.failed}`);
 
         const memos = await this.importMemos(flomo);
 

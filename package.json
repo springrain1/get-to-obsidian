@@ -1,6 +1,6 @@
 {
   "name": "get-importer-plugin",
-  "version": "3.9.0",
+  "version": "3.9.1",
   "description": "Import Get笔记 Notes to Obsidian",
   "main": "main.js",
   "scripts": {

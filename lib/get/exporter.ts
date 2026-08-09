@@ -12,26 +12,20 @@ export class GetExporter {
             const context = await browser.newContext({ storageState: AUTH_FILE });
             const page = await context.newPage();
 
-            console.log('正在访问 Get笔记 导出页面...');
             // 访问Get笔记导出页面
             await page.goto(GET_EXPORT_URL, { waitUntil: 'networkidle' });
 
             // 等待页面加载完成
             await page.waitForLoadState('load');
             await page.waitForTimeout(2000);
-            console.log('页面已加载完成');
 
             // 调试用: 保存页面截图
             try {
                 const screenshotPath = DOWNLOAD_FILE.replace('get_export.zip', 'page_screenshot.png');
                 await page.screenshot({ path: screenshotPath, fullPage: true });
-                console.log(`页面截图已保存到: ${screenshotPath}`);
-            } catch (e) {
-                console.log('保存截图失败:', e.message);
-            }
+            } catch(err) {/* ignore */}
 
             // 等待导出相关元素出现
-            console.log('查找导出按钮...');
 
             // 尝试多种方式查找导出按钮
             let exportButton = null;
@@ -42,10 +36,7 @@ export class GetExporter {
                 exportButton = page.locator('button:has-text("导出")').first();
                 await exportButton.waitFor({ state: 'visible', timeout: 5000 });
                 foundMethod = '方式1: 导出按钮';
-                console.log('找到导出按钮 (方式1)');
-            } catch (e) {
-                console.log('方式1失败,尝试方式2');
-            }
+            } catch(err) {/* ignore */}
 
             // 方式2: 查找包含"下载"文本的按钮（Get笔记可能使用"下载"）
             if (!exportButton) {
@@ -53,10 +44,7 @@ export class GetExporter {
                     exportButton = page.locator('button:has-text("下载")').first();
                     await exportButton.waitFor({ state: 'visible', timeout: 5000 });
                     foundMethod = '方式2: 下载按钮';
-                    console.log('找到导出按钮 (方式2: 下载)');
-                } catch (e) {
-                    console.log('方式2失败,尝试方式3');
-                }
+                } catch(err) {/* ignore */}
             }
 
             // 方式3: 通过 class 或 role 查找
@@ -65,17 +53,13 @@ export class GetExporter {
                     exportButton = page.locator('[class*="export"], [class*="download"], a:has-text("导出"), a:has-text("下载")').first();
                     await exportButton.waitFor({ state: 'visible', timeout: 5000 });
                     foundMethod = '方式3: 通用选择器';
-                    console.log('找到导出按钮 (方式3)');
-                } catch (e) {
-                    console.log('方式3失败');
-                }
+                } catch(err) {/* ignore */}
             }
 
             if (!exportButton) {
                 throw new Error('无法找到导出按钮。请检查Get笔记导出页面的实际结构。');
             }
 
-            console.log(`成功找到导出按钮 (${foundMethod})`);
 
             // 确保按钮完全可点击
             await exportButton.scrollIntoViewIfNeeded();
@@ -85,17 +69,12 @@ export class GetExporter {
             const downloadPromise = page.waitForEvent('download', { timeout: 10 * 60 * 1000 });
 
             // 点击导出按钮
-            console.log('点击导出按钮...');
             await exportButton.click({ timeout: 5000 });
-            console.log('已触发点击');
 
             // 等待下载开始
-            console.log('等待下载开始...');
             const download = await downloadPromise;
-            console.log('下载已触发,正在保存文件...');
 
             await download.saveAs(DOWNLOAD_FILE);
-            console.log(`文件已保存到: ${DOWNLOAD_FILE}`);
 
             // Teardown
             await context.close();
@@ -109,8 +88,8 @@ export class GetExporter {
             if (browser) {
                 try {
                     await browser.close();
-                } catch (e) {
-                    console.error('关闭浏览器失败:', e);
+                } catch(err) {
+                    console.error('关闭浏览器失败:', err);
                 }
             }
 

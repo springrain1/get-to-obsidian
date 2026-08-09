@@ -1,7 +1,7 @@
-import { App, Modal, Plugin, Setting, Notice } from 'obsidian';
+import { App, Modal, Setting, } from 'obsidian';
 import * as fs from 'fs-extra';
 import type GetImporterPlugin from '../../main';
-import { createExpOpt } from './common';
+import { } from './common';
 
 
 export class ManualSyncUI extends Modal {
@@ -26,7 +26,6 @@ export class ManualSyncUI extends Modal {
         fileLocContol.setAttr("accept", ".zip");
         fileLocContol.onchange = (ev) => {
             this.rawPath = (ev.currentTarget as HTMLInputElement).files[0]["path"];
-            console.log(this.rawPath)
         };
 
         contentEl.createEl("br");

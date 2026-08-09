@@ -1,9 +1,9 @@
-import { App, Modal, Plugin, Setting, Notice } from 'obsidian';
-import { createExpOpt } from './common';
+import { App, Modal, Setting, Notice } from 'obsidian';
+import { } from './common';
 import { MessageUI } from './message_ui'
 import { GetAuth } from '../get/auth';
 import * as fs from 'fs-extra';
-import { AUTH_FILE } from '../get/const';
+import { } from '../get/const';
 import type GetImporterPlugin from '../../main';
 import * as playwright from 'playwright';
 
@@ -101,7 +101,7 @@ export class AuthUI extends Modal {
         if (this.browser) {
             try {
                 await this.browser.close();
-            } catch (e) {}
+            } catch(err) {/* ignore */}
             this.browser = null;
             this.context = null;
             this.page = null;
