@@ -201,11 +201,11 @@ export class GetCore {
                 content = content
                     .replace(/^\n+/, '')
                     .replace(/\n+$/, '');
-                var prefix = options.bulletListMarker + ' ';
-                var parent = node.parentNode;
+                let prefix = options.bulletListMarker + ' ';
+                let parent = node.parentNode;
                 if (parent.nodeName === 'OL') {
-                    var start = parent.getAttribute('start');
-                    var index = Array.prototype.indexOf.call(parent.children, node);
+                    let start = parent.getAttribute('start');
+                    let index = Array.prototype.indexOf.call(parent.children, node);
                     prefix = (start ? Number(start) + index : index + 1) + '. ';
                 }
                 const suffix = node.nextSibling ? '\n' : '';

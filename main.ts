@@ -1,7 +1,6 @@
 import { addIcon, Plugin, Notice, ButtonComponent } from 'obsidian';
 import { MainUI } from './lib/ui/main_ui';
 import {  } from './lib/get/importer';
-import * as fs from 'fs-extra';
 import {  } from './lib/get/const';
 
 const GET_NOTES_ICON = '<svg xmlns="http://www.w3.org/2000/svg" ' +
@@ -14,7 +13,7 @@ const GET_NOTES_ICON = '<svg xmlns="http://www.w3.org/2000/svg" ' +
 	'<line x1="8" y1="15" x2="13" y2="15"/>' +
 	'</svg>';
 
-interface MyPluginSettings {
+interface GetImporterSettings {
 	getTarget: string,
 	memoTarget: string,
 	optionsMoments: string,
@@ -34,7 +33,7 @@ interface MyPluginSettings {
 	}
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: GetImporterSettings = {
 	getTarget: 'get',
 	memoTarget: 'notes',
 	optionsMoments: "copy_with_link",
@@ -55,7 +54,7 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 }
 
 export default class GetImporterPlugin extends Plugin {
-	settings: MyPluginSettings;
+	settings: GetImporterSettings;
 	mainUI: MainUI;
 	syncIntervalId: number | null = null;
 	
@@ -147,7 +146,7 @@ export default class GetImporterPlugin extends Plugin {
 	async syncGet() {
 		try {
 			// 使用 mainUI 的 onSync 方法进行同步
-			const syncBtn = new ButtonComponent(createEl('div'));
+			const syncBtn = new ButtonComponent(createDiv());
 			await this.mainUI.onSync(syncBtn);
 
 			// 更新最后同步时间
