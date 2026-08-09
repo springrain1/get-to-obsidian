@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import { addIcon, Plugin, Notice, ButtonComponent } from 'obsidian';
 import { MainUI } from './lib/ui/main_ui';
 import {  } from './lib/get/importer';
@@ -60,7 +59,8 @@ export default class GetImporterPlugin extends Plugin {
 	mainUI: MainUI;
 	syncIntervalId: number | null = null;
 	
-	async onload() {
+	onload() {
+		void (async () => {
 		await this.loadSettings();
 		this.mainUI = new MainUI(this.app, this);
 
@@ -93,8 +93,8 @@ export default class GetImporterPlugin extends Plugin {
 		// 启动时自动同步
 		if (this.settings.autoSyncOnStartup) {
 			// 等待 2 秒让 Obsidian 完全加载
-			window.setTimeout(async () => {
-				await this.syncGet();
+			window.setTimeout(() => {
+				void this.syncGet();
 			}, 2000);
 		}
 		
@@ -102,6 +102,7 @@ export default class GetImporterPlugin extends Plugin {
 		if (this.settings.autoSyncInterval) {
 			this.startAutoSync();
 		}
+		})();
 	}
 
 	
@@ -129,8 +130,8 @@ export default class GetImporterPlugin extends Plugin {
 		}
 		
 		// 设置每小时同步一次 (3600000ms = 1小时)
-		this.syncIntervalId = window.setInterval(async () => {
-			await this.syncGet();
+		this.syncIntervalId = window.setInterval(() => {
+			void this.syncGet();
 		}, 3600000);
 	}
 	

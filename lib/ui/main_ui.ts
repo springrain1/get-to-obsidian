@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import { App, Modal, Setting, Notice, ButtonComponent } from 'obsidian';
 
 import { createExpOpt } from './common';
@@ -8,6 +7,7 @@ import { GetExporter } from '../get/exporter';
 import type GetImporterPlugin from '../../main';
 
 import * as fs from 'fs-extra';
+// eslint-disable-next-line @typescript-eslint/no-var-requires -- Node.js APIs are required for desktop capabilities
 const path = require("path");
 
 import { AUTH_FILE, DOWNLOAD_FILE } from '../get/const'
@@ -143,7 +143,7 @@ export class MainUI extends Modal {
             
             // 确保流正确关闭
             await new Promise<void>((resolve, reject) => {
-                ws.end(err => err ? reject(err) : resolve());
+                ws.end(err => err ? reject(err instanceof Error ? err : new Error(String(err))) : resolve());
             });
         } catch (error) {
             ws.destroy();

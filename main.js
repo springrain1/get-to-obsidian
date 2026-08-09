@@ -85479,7 +85479,7 @@ ${err}`);
         }
       }
       await new Promise((resolve, reject) => {
-        ws2.end((err) => err ? reject(err) : resolve());
+        ws2.end((err) => err ? reject(err instanceof Error ? err : new Error(String(err))) : resolve());
       });
     } catch (error) {
       ws2.destroy();
@@ -85762,36 +85762,38 @@ var GetImporterPlugin = class extends import_obsidian4.Plugin {
     __publicField(this, "mainUI");
     __publicField(this, "syncIntervalId", null);
   }
-  async onload() {
-    await this.loadSettings();
-    this.mainUI = new MainUI(this.app, this);
-    (0, import_obsidian4.addIcon)("get-notes", GET_NOTES_ICON);
-    const ribbonIconEl = this.addRibbonIcon("get-notes", "Get\u7B14\u8BB0 Importer", (evt) => {
-      this.mainUI.open();
-    });
-    ribbonIconEl.addClass("my-plugin-ribbon-class");
-    this.addCommand({
-      id: "open-get-importer",
-      name: "Open Get\u7B14\u8BB0 Importer",
-      callback: () => {
+  onload() {
+    void (async () => {
+      await this.loadSettings();
+      this.mainUI = new MainUI(this.app, this);
+      (0, import_obsidian4.addIcon)("get-notes", GET_NOTES_ICON);
+      const ribbonIconEl = this.addRibbonIcon("get-notes", "Get\u7B14\u8BB0 Importer", (evt) => {
         this.mainUI.open();
+      });
+      ribbonIconEl.addClass("my-plugin-ribbon-class");
+      this.addCommand({
+        id: "open-get-importer",
+        name: "Open Get\u7B14\u8BB0 Importer",
+        callback: () => {
+          this.mainUI.open();
+        }
+      });
+      this.addCommand({
+        id: "sync-get-now",
+        name: "Sync Get\u7B14\u8BB0 Now",
+        callback: async () => {
+          await this.syncGet();
+        }
+      });
+      if (this.settings.autoSyncOnStartup) {
+        window.setTimeout(() => {
+          void this.syncGet();
+        }, 2e3);
       }
-    });
-    this.addCommand({
-      id: "sync-get-now",
-      name: "Sync Get\u7B14\u8BB0 Now",
-      callback: async () => {
-        await this.syncGet();
+      if (this.settings.autoSyncInterval) {
+        this.startAutoSync();
       }
-    });
-    if (this.settings.autoSyncOnStartup) {
-      window.setTimeout(async () => {
-        await this.syncGet();
-      }, 2e3);
-    }
-    if (this.settings.autoSyncInterval) {
-      this.startAutoSync();
-    }
+    })();
   }
   onunload() {
     if (this.syncIntervalId !== null) {
@@ -85809,8 +85811,8 @@ var GetImporterPlugin = class extends import_obsidian4.Plugin {
     if (this.syncIntervalId !== null) {
       window.clearInterval(this.syncIntervalId);
     }
-    this.syncIntervalId = window.setInterval(async () => {
-      await this.syncGet();
+    this.syncIntervalId = window.setInterval(() => {
+      void this.syncGet();
     }, 36e5);
   }
   stopAutoSync() {
