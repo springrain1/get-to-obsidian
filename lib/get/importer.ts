@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra';
-// eslint-disable-next-line @typescript-eslint/no-var-requires -- Node.js APIs are required for desktop capabilities
-const path = require("path");
+const nodeRequire = typeof window !== 'undefined' ? (window as any).require : null;
+const path = nodeRequire ? nodeRequire('path') : null;
 import { App } from 'obsidian';
 import decompress from 'decompress';
 import * as parse5 from "parse5"

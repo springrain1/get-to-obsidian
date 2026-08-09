@@ -61919,13 +61919,15 @@ __export(const_exports, {
   GET_LOGIN_URL: () => GET_LOGIN_URL,
   GET_PLAYWRIGHT_CACHE_LOC: () => GET_PLAYWRIGHT_CACHE_LOC
 });
-var path, os, GET_CACHE_LOC, GET_PLAYWRIGHT_CACHE_LOC, AUTH_FILE, DOWNLOAD_FILE, GET_LOGIN_URL, GET_EXPORT_URL;
+var import_obsidian2, nodeRequire, path, os, GET_CACHE_LOC, GET_PLAYWRIGHT_CACHE_LOC, AUTH_FILE, DOWNLOAD_FILE, GET_LOGIN_URL, GET_EXPORT_URL;
 var init_const = __esm({
   "lib/get/const.ts"() {
-    path = require("path");
-    os = require("os");
-    GET_CACHE_LOC = path.join(os.homedir(), "/.get/cache/");
-    GET_PLAYWRIGHT_CACHE_LOC = path.join(os.homedir(), "/.get/cache/playwright/");
+    import_obsidian2 = require("obsidian");
+    nodeRequire = typeof window !== "undefined" ? window.require : null;
+    path = import_obsidian2.Platform.isDesktopApp && nodeRequire ? nodeRequire("path") : null;
+    os = import_obsidian2.Platform.isDesktopApp && nodeRequire ? nodeRequire("os") : null;
+    GET_CACHE_LOC = path && os ? path.join(os.homedir(), "/.get/cache/") : "";
+    GET_PLAYWRIGHT_CACHE_LOC = path && os ? path.join(os.homedir(), "/.get/cache/playwright/") : "";
     AUTH_FILE = GET_PLAYWRIGHT_CACHE_LOC + "get_auth.json";
     DOWNLOAD_FILE = GET_PLAYWRIGHT_CACHE_LOC + "get_export.zip";
     GET_LOGIN_URL = "https://www.biji.com/";
@@ -76038,14 +76040,14 @@ __export(main_exports, {
   default: () => GetImporterPlugin
 });
 module.exports = __toCommonJS(main_exports);
-var import_obsidian4 = require("obsidian");
+var import_obsidian6 = require("obsidian");
 
 // lib/ui/main_ui.ts
-var import_obsidian3 = require("obsidian");
+var import_obsidian4 = require("obsidian");
 
 // lib/ui/common.ts
 function createExpOpt(contentEl, label) {
-  const expOptionBlock = contentEl.createEl("div", { cls: "expOptionBlock" });
+  const expOptionBlock = contentEl.createDiv({ cls: "expOptionBlock" });
   const expOptionLabel = expOptionBlock.createEl("label");
   const optBox = expOptionLabel.createEl("input", { type: "checkbox", cls: "ckbox" });
   expOptionLabel.createEl("small", { text: label });
@@ -76053,7 +76055,7 @@ function createExpOpt(contentEl, label) {
 }
 
 // lib/ui/auth_ui.ts
-var import_obsidian2 = require("obsidian");
+var import_obsidian3 = require("obsidian");
 
 // lib/ui/message_ui.ts
 var import_obsidian = require("obsidian");
@@ -76144,7 +76146,7 @@ var GetAuth = class {
 };
 
 // lib/ui/auth_ui.ts
-var AuthUI = class extends import_obsidian2.Modal {
+var AuthUI = class extends import_obsidian3.Modal {
   constructor(app, plugin) {
     super(app);
     __publicField(this, "plugin");
@@ -76159,10 +76161,10 @@ var AuthUI = class extends import_obsidian2.Modal {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.createEl("h3", { text: "\u8FDE\u63A5\u5230 Get\u7B14\u8BB0" });
-    new import_obsidian2.Setting(contentEl).setName("\u624B\u673A\u53F7\u7801").setDesc("\u8BF7\u8F93\u5165\u60A8\u7684 Get\u7B14\u8BB0 \u624B\u673A\u53F7").addText((text) => text.setPlaceholder("\u8BF7\u8F93\u5165\u624B\u673A\u53F7").onChange(async (value) => {
+    new import_obsidian3.Setting(contentEl).setName("\u624B\u673A\u53F7\u7801").setDesc("\u8BF7\u8F93\u5165\u60A8\u7684 Get\u7B14\u8BB0 \u624B\u673A\u53F7").addText((text) => text.setPlaceholder("\u8BF7\u8F93\u5165\u624B\u673A\u53F7").onChange(async (value) => {
       this.phone = value;
     }));
-    new import_obsidian2.Setting(contentEl).setDesc("\u524D\u7F6E\u6761\u4EF6: npx playwright@1.43.1 install").addButton((btn) => {
+    new import_obsidian3.Setting(contentEl).setDesc("\u524D\u7F6E\u6761\u4EF6: npx playwright@1.43.1 install").addButton((btn) => {
       btn.setButtonText("\u53D6\u6D88").onClick(async () => {
         await this.cleanup();
         this.close();
@@ -76170,7 +76172,7 @@ var AuthUI = class extends import_obsidian2.Modal {
     }).addButton((btn) => {
       btn.setButtonText("\u53D1\u9001\u9A8C\u8BC1\u7801").setCta().onClick(async () => {
         if (this.phone === "" || this.phone.length !== 11) {
-          new import_obsidian2.Notice("\u8BF7\u8F93\u5165\u6B63\u786E\u7684\u624B\u673A\u53F7\u7801\uFF0811\u4F4D\uFF09");
+          new import_obsidian3.Notice("\u8BF7\u8F93\u5165\u6B63\u786E\u7684\u624B\u673A\u53F7\u7801\uFF0811\u4F4D\uFF09");
           return;
         }
         btn.setButtonText("\u53D1\u9001\u4E2D...");
@@ -76181,20 +76183,20 @@ var AuthUI = class extends import_obsidian2.Modal {
           this.browser = result[2];
           this.context = result[3];
           this.page = result[4];
-          new import_obsidian2.Notice("\u8BF7\u5728\u6D4F\u89C8\u5668\u4E2D\u624B\u52A8\u70B9\u51FB'\u83B7\u53D6\u9A8C\u8BC1\u7801'\uFF0C\u8F93\u5165\u9A8C\u8BC1\u7801\u5E76\u70B9\u51FB'\u767B\u5F55'\u6309\u94AE", 1e4);
+          new import_obsidian3.Notice("\u8BF7\u5728\u6D4F\u89C8\u5668\u4E2D\u624B\u52A8\u70B9\u51FB'\u83B7\u53D6\u9A8C\u8BC1\u7801'\uFF0C\u8F93\u5165\u9A8C\u8BC1\u7801\u5E76\u70B9\u51FB'\u767B\u5F55'\u6309\u94AE", 1e4);
           btn.setButtonText("\u7B49\u5F85\u767B\u5F55\u4E2D...");
           const loginResult = await auth.waitForManualLogin(this.browser, this.context, this.page);
           if (loginResult[0]) {
             new MessageUI(this.app, "\u{1F917} \u767B\u5F55\u6210\u529F\uFF01").open();
             this.close();
           } else {
-            new import_obsidian2.Notice(`\u767B\u5F55\u5931\u8D25: ${loginResult[1]}`);
+            new import_obsidian3.Notice(`\u767B\u5F55\u5931\u8D25: ${loginResult[1]}`);
             btn.setButtonText("\u53D1\u9001\u9A8C\u8BC1\u7801");
             btn.setDisabled(false);
             await this.cleanup();
           }
         } else {
-          new import_obsidian2.Notice(`\u53D1\u9001\u9A8C\u8BC1\u7801\u5931\u8D25: ${result[1]}`);
+          new import_obsidian3.Notice(`\u53D1\u9001\u9A8C\u8BC1\u7801\u5931\u8D25: ${result[1]}`);
           btn.setButtonText("\u53D1\u9001\u9A8C\u8BC1\u7801");
           btn.setDisabled(false);
         }
@@ -85002,7 +85004,7 @@ tags:
   - ${tags.join("\n  - ")}
 ---
 `);
-    for (const [idx, memoFile] of sortedFiles.entries()) {
+    for (const memoFile of sortedFiles) {
       buffer.push(`![[${memoFile}]]
 
 ---
@@ -85129,7 +85131,8 @@ async function generateCanvas(app, flomo, config) {
 
 // lib/get/importer.ts
 init_const();
-var path2 = require("path");
+var nodeRequire2 = typeof window !== "undefined" ? window.require : null;
+var path2 = nodeRequire2 ? nodeRequire2("path") : null;
 var ATTACHMENT_EXTENSIONS = {
   image: ["jpg", "jpeg", "png", "gif", "webp", "heic", "bmp", "svg"],
   audio: ["mp3", "m4a", "wav", "aac", "ogg", "flac"],
@@ -85381,9 +85384,11 @@ var GetExporter = class {
 
 // lib/ui/main_ui.ts
 var fs3 = __toESM(require_lib());
+var import_obsidian5 = require("obsidian");
 init_const();
-var path3 = require("path");
-var MainUI = class extends import_obsidian3.Modal {
+var nodeRequire3 = typeof window !== "undefined" ? window.require : null;
+var path3 = import_obsidian5.Platform.isDesktopApp && nodeRequire3 ? nodeRequire3("path") : null;
+var MainUI = class extends import_obsidian4.Modal {
   constructor(app, plugin) {
     super(app);
     __publicField(this, "plugin");
@@ -85415,7 +85420,7 @@ var MainUI = class extends import_obsidian3.Modal {
       }
     } catch (err) {
       btn.setButtonText("Auto Sync \u{1F917}");
-      new import_obsidian3.Notice(`Get\u7B14\u8BB0 \u540C\u6B65\u9519\u8BEF. \u8BE6\u60C5:
+      new import_obsidian4.Notice(`Get\u7B14\u8BB0 \u540C\u6B65\u9519\u8BEF. \u8BE6\u60C5:
 ${err}`);
     }
   }
@@ -85426,7 +85431,7 @@ ${err}`);
         zipSource = await this.resolveZipSourceFromSelectedFile();
       } catch (err) {
         console.error("ZIP \u6765\u6E90\u89E3\u6790\u5931\u8D25:", err);
-        new import_obsidian3.Notice("ZIP \u6765\u6E90\u89E3\u6790\u5931\u8D25: " + err.message);
+        new import_obsidian4.Notice("ZIP \u6765\u6E90\u89E3\u6790\u5931\u8D25: " + err.message);
         return;
       }
     } else if (this.rawPath) {
@@ -85436,7 +85441,7 @@ ${err}`);
         source: "direct"
       };
     } else {
-      new import_obsidian3.Notice("\u8BF7\u5148\u9009\u62E9 ZIP \u6587\u4EF6");
+      new import_obsidian4.Notice("\u8BF7\u5148\u9009\u62E9 ZIP \u6587\u4EF6");
       return;
     }
     const targetMemoLocation = this.plugin.settings.getTarget + "/" + this.plugin.settings.memoTarget;
@@ -85455,14 +85460,14 @@ ${err}`);
         this.plugin.settings.syncedMemoIds = flomo.syncedMemoIds;
         await this.plugin.saveSettings();
       }
-      new import_obsidian3.Notice(`\u{1F389} \u5BFC\u5165\u5B8C\u6210.
+      new import_obsidian4.Notice(`\u{1F389} \u5BFC\u5165\u5B8C\u6210.
 \u603B\u6570: ${flomo.memos.length} \u6761\u7B14\u8BB0, \u65B0\u589E: ${flomo.newMemosCount || 0} \u6761\u7B14\u8BB0`);
       this.rawPath = "";
       this.selectedFile = null;
     } catch (err) {
       this.rawPath = "";
       this.selectedFile = null;
-      new import_obsidian3.Notice(`Get\u7B14\u8BB0 \u5BFC\u5165\u9519\u8BEF. \u8BE6\u60C5:
+      new import_obsidian4.Notice(`Get\u7B14\u8BB0 \u5BFC\u5165\u9519\u8BEF. \u8BE6\u60C5:
 ${err}`);
     }
   }
@@ -85551,25 +85556,25 @@ ${err}`);
     };
     const basicSettingsSection = contentEl.createDiv({ cls: "get-importer-section" });
     basicSettingsSection.createEl("h3", { text: "\u2699\uFE0F \u57FA\u672C\u8BBE\u7F6E" });
-    new import_obsidian3.Setting(basicSettingsSection).setName("Get\u7B14\u8BB0 Home").setDesc("\u8BBE\u7F6E Get\u7B14\u8BB0 \u4E3B\u76EE\u5F55\u4F4D\u7F6E").addText((text) => text.setPlaceholder("get").setValue(this.plugin.settings.getTarget).onChange(async (value) => {
+    new import_obsidian4.Setting(basicSettingsSection).setName("Get\u7B14\u8BB0 Home").setDesc("\u8BBE\u7F6E Get\u7B14\u8BB0 \u4E3B\u76EE\u5F55\u4F4D\u7F6E").addText((text) => text.setPlaceholder("get").setValue(this.plugin.settings.getTarget).onChange(async (value) => {
       this.plugin.settings.getTarget = value;
     }));
-    new import_obsidian3.Setting(basicSettingsSection).setName("\u7B14\u8BB0\u76EE\u5F55").setDesc("\u7B14\u8BB0\u5B58\u653E\u4F4D\u7F6E: Get\u7B14\u8BB0Home / \u7B14\u8BB0\u76EE\u5F55").addText((text) => text.setPlaceholder("notes").setValue(this.plugin.settings.memoTarget).onChange(async (value) => {
+    new import_obsidian4.Setting(basicSettingsSection).setName("\u7B14\u8BB0\u76EE\u5F55").setDesc("\u7B14\u8BB0\u5B58\u653E\u4F4D\u7F6E: Get\u7B14\u8BB0Home / \u7B14\u8BB0\u76EE\u5F55").addText((text) => text.setPlaceholder("notes").setValue(this.plugin.settings.memoTarget).onChange(async (value) => {
       this.plugin.settings.memoTarget = value;
     }));
     const visualSection = contentEl.createDiv({ cls: "get-importer-section" });
     visualSection.createEl("h3", { text: "\u{1F3A8} \u53EF\u89C6\u5316\u8BBE\u7F6E" });
-    new import_obsidian3.Setting(visualSection).setName("Moments").setDesc("\u751F\u6210 Moments \u65F6\u95F4\u7EBF\u6587\u4EF6").addDropdown((drp) => {
+    new import_obsidian4.Setting(visualSection).setName("Moments").setDesc("\u751F\u6210 Moments \u65F6\u95F4\u7EBF\u6587\u4EF6").addDropdown((drp) => {
       drp.addOption("copy_with_link", "\u751F\u6210 Moments").addOption("skip", "\u8DF3\u8FC7 Moments").setValue(this.plugin.settings.optionsMoments).onChange(async (value) => {
         this.plugin.settings.optionsMoments = value;
       });
     });
-    new import_obsidian3.Setting(visualSection).setName("Canvas").setDesc("\u751F\u6210 Canvas \u753B\u5E03\u6587\u4EF6").addDropdown((drp) => {
+    new import_obsidian4.Setting(visualSection).setName("Canvas").setDesc("\u751F\u6210 Canvas \u753B\u5E03\u6587\u4EF6").addDropdown((drp) => {
       drp.addOption("copy_with_link", "\u751F\u6210 Canvas\uFF08\u94FE\u63A5\u6A21\u5F0F\uFF09").addOption("copy_with_content", "\u751F\u6210 Canvas\uFF08\u5185\u5BB9\u6A21\u5F0F\uFF09").addOption("skip", "\u8DF3\u8FC7 Canvas").setValue(this.plugin.settings.optionsCanvas).onChange(async (value) => {
         this.plugin.settings.optionsCanvas = value;
       });
     });
-    const canvsOptionBlock = visualSection.createEl("div", { cls: "canvasOptionBlock" });
+    const canvsOptionBlock = visualSection.createDiv({ cls: "canvasOptionBlock" });
     const canvsOptionLabelL = canvsOptionBlock.createEl("label");
     const canvsOptionLabelM = canvsOptionBlock.createEl("label");
     const canvsOptionLabelS = canvsOptionBlock.createEl("label");
@@ -85660,18 +85665,18 @@ ${err}`);
       const lastSyncDate = new Date(this.plugin.settings.lastSyncTime);
       const syncedCount = ((_a2 = this.plugin.settings.syncedMemoIds) == null ? void 0 : _a2.length) || 0;
       const syncStatusEl = autoSyncSection.createDiv({ cls: "sync-status-box" });
-      syncStatusEl.createEl("div", {
+      syncStatusEl.createDiv({
         text: `\u{1F4C5} \u4E0A\u6B21\u540C\u6B65: ${lastSyncDate.toLocaleString()}`,
         cls: "sync-info-item"
       });
-      syncStatusEl.createEl("div", {
+      syncStatusEl.createDiv({
         text: `\u{1F4DD} \u5DF2\u540C\u6B65\u7B14\u8BB0: ${syncedCount} \u6761`,
         cls: "sync-info-item"
       });
     }
     const dataSection = contentEl.createDiv({ cls: "get-importer-section" });
     dataSection.createEl("h3", { text: "\u{1F5C3}\uFE0F \u6570\u636E\u7BA1\u7406" });
-    new import_obsidian3.Setting(dataSection).setName("\u91CD\u7F6E\u540C\u6B65\u5386\u53F2").setDesc("\u6E05\u9664\u6240\u6709\u5DF2\u540C\u6B65\u7684\u7B14\u8BB0\u8BB0\u5F55\uFF0C\u4E0B\u6B21\u540C\u6B65\u65F6\u5C06\u91CD\u65B0\u5BFC\u5165\u6240\u6709\u7B14\u8BB0").addButton((btn) => {
+    new import_obsidian4.Setting(dataSection).setName("\u91CD\u7F6E\u540C\u6B65\u5386\u53F2").setDesc("\u6E05\u9664\u6240\u6709\u5DF2\u540C\u6B65\u7684\u7B14\u8BB0\u8BB0\u5F55\uFF0C\u4E0B\u6B21\u540C\u6B65\u65F6\u5C06\u91CD\u65B0\u5BFC\u5165\u6240\u6709\u7B14\u8BB0").addButton((btn) => {
       btn.setButtonText("\u91CD\u7F6E\u540C\u6B65\u5386\u53F2").setWarning().onClick(async () => {
         var _a3;
         const getTarget = this.plugin.settings.getTarget || "get";
@@ -85690,7 +85695,7 @@ ${err}`);
           this.plugin.settings.syncedMemoIds = [];
           this.plugin.settings.lastSyncTime = 0;
           await this.plugin.saveSettings();
-          new import_obsidian3.Notice(`\u540C\u6B65\u5386\u53F2\u5DF2\u91CD\u7F6E\u3002
+          new import_obsidian4.Notice(`\u540C\u6B65\u5386\u53F2\u5DF2\u91CD\u7F6E\u3002
 
 \u26A0\uFE0F  \u8BB0\u5F97\u5728\u4E0B\u6B21\u540C\u6B65\u524D\u5220\u9664\u65E7\u76EE\u5F55:
 - ${getTarget}/${memoTarget}/
@@ -85701,7 +85706,7 @@ ${err}`);
       });
     });
     const actionSection = contentEl.createDiv({ cls: "get-importer-actions" });
-    new import_obsidian3.Setting(actionSection).addButton((btn) => {
+    new import_obsidian4.Setting(actionSection).addButton((btn) => {
       btn.setButtonText("\u53D6\u6D88").onClick(async () => {
         await this.plugin.saveSettings();
         this.close();
@@ -85713,7 +85718,7 @@ ${err}`);
           await this.onSubmit();
           this.close();
         } else {
-          new import_obsidian3.Notice("\u8BF7\u5148\u9009\u62E9 ZIP \u6587\u4EF6");
+          new import_obsidian4.Notice("\u8BF7\u5148\u9009\u62E9 ZIP \u6587\u4EF6");
         }
       });
     }).addButton((btn) => {
@@ -85755,7 +85760,7 @@ var DEFAULT_SETTINGS = {
     document: true
   }
 };
-var GetImporterPlugin = class extends import_obsidian4.Plugin {
+var GetImporterPlugin = class extends import_obsidian6.Plugin {
   constructor() {
     super(...arguments);
     __publicField(this, "settings");
@@ -85766,7 +85771,7 @@ var GetImporterPlugin = class extends import_obsidian4.Plugin {
     void (async () => {
       await this.loadSettings();
       this.mainUI = new MainUI(this.app, this);
-      (0, import_obsidian4.addIcon)("get-notes", GET_NOTES_ICON);
+      (0, import_obsidian6.addIcon)("get-notes", GET_NOTES_ICON);
       const ribbonIconEl = this.addRibbonIcon("get-notes", "Get\u7B14\u8BB0 Importer", (evt) => {
         this.mainUI.open();
       });
@@ -85823,13 +85828,13 @@ var GetImporterPlugin = class extends import_obsidian4.Plugin {
   }
   async syncGet() {
     try {
-      const syncBtn = new import_obsidian4.ButtonComponent(createEl("div"));
+      const syncBtn = new import_obsidian6.ButtonComponent(createDiv());
       await this.mainUI.onSync(syncBtn);
       this.settings.lastSyncTime = Date.now();
       await this.saveSettings();
     } catch (error) {
       console.error("Auto sync failed:", error);
-      new import_obsidian4.Notice("Get\u7B14\u8BB0 auto sync failed: " + error.message);
+      new import_obsidian6.Notice("Get\u7B14\u8BB0 auto sync failed: " + error.message);
     }
   }
   async runAutoSync() {

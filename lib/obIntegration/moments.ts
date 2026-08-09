@@ -38,7 +38,7 @@ export async function generateMoments(app: App, flomo: GetCore, config: Record<s
 
         buffer.push(`---\ncreatedDate: ${(new Date()).toLocaleString().split(' ')[0]}\ntags:\n  - ${tags.join("\n  - ")}\n---\n`);
 
-        for (const [idx, memoFile] of sortedFiles.entries()) {
+        for (const memoFile of sortedFiles) {
             buffer.push(`![[${memoFile}]]\n\n---\n`);
         };
 

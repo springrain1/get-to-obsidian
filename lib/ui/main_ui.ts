@@ -7,8 +7,9 @@ import { GetExporter } from '../get/exporter';
 import type GetImporterPlugin from '../../main';
 
 import * as fs from 'fs-extra';
-// eslint-disable-next-line @typescript-eslint/no-var-requires -- Node.js APIs are required for desktop capabilities
-const path = require("path");
+import { Platform } from 'obsidian';
+const nodeRequire = typeof window !== 'undefined' ? (window as any).require : null;
+const path = Platform.isDesktopApp && nodeRequire ? nodeRequire('path') : null;
 
 import { AUTH_FILE, DOWNLOAD_FILE } from '../get/const'
 
@@ -284,7 +285,7 @@ export class MainUI extends Modal {
                     })
             });
 
-        const canvsOptionBlock: HTMLDivElement = visualSection.createEl("div", { cls: "canvasOptionBlock" });
+        const canvsOptionBlock: HTMLDivElement = visualSection.createDiv({ cls: "canvasOptionBlock" });
 
         const canvsOptionLabelL: HTMLLabelElement = canvsOptionBlock.createEl("label");
         const canvsOptionLabelM: HTMLLabelElement = canvsOptionBlock.createEl("label");
@@ -406,11 +407,11 @@ export class MainUI extends Modal {
             const syncedCount = this.plugin.settings.syncedMemoIds?.length || 0;
 
             const syncStatusEl = autoSyncSection.createDiv({ cls: "sync-status-box" });
-            syncStatusEl.createEl("div", {
+            syncStatusEl.createDiv({
                 text: `📅 上次同步: ${lastSyncDate.toLocaleString()}`,
                 cls: "sync-info-item"
             });
-            syncStatusEl.createEl("div", {
+            syncStatusEl.createDiv({
                 text: `📝 已同步笔记: ${syncedCount} 条`,
                 cls: "sync-info-item"
             });
@@ -430,7 +431,8 @@ export class MainUI extends Modal {
                     .onClick(async () => {
                         const getTarget = this.plugin.settings.getTarget || "get";
                         const memoTarget = this.plugin.settings.memoTarget || "notes";
-                        const confirmed = confirm(
+                        // eslint-disable-next-line no-alert
+const confirmed = confirm(
                             `确定要重置同步历史吗？\n\n` +
                             `这将清除 ${this.plugin.settings.syncedMemoIds?.length || 0} 条已同步的笔记记录。\n` +
                             `下次同步时将重新导入所有 Get笔记。\n\n` +

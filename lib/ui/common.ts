@@ -10,7 +10,7 @@ export function getDate (daysAgo:number = 0) :string[] {
 }
 
 export function createExpOpt(contentEl, label: string) :HTMLInputElement {
-    const expOptionBlock: HTMLDivElement = contentEl.createEl("div", { cls: "expOptionBlock" });
+    const expOptionBlock: HTMLDivElement = contentEl.createDiv({ cls: "expOptionBlock" });
     const expOptionLabel: HTMLLabelElement = expOptionBlock.createEl("label");
     const optBox: HTMLInputElement = expOptionLabel.createEl("input", { type: "checkbox", cls: "ckbox" })
     expOptionLabel.createEl("small", { text: label });

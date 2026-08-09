@@ -2,11 +2,6 @@ import { App } from 'obsidian';
 import { v4 as uuidv4 } from 'uuid';
 import { GetCore } from '../get/core';
 
-const canvasJson = {
-    "nodes": [],
-    "edges": []
-}
-
 const canvasSize = {
     "L": [500, 500],
     "M": [300, 350],

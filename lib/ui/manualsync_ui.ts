@@ -1,5 +1,4 @@
 import { App, Modal, Setting, } from 'obsidian';
-import * as fs from 'fs-extra';
 import type GetImporterPlugin from '../../main';
 import { } from './common';
 

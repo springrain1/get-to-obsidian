@@ -2,7 +2,6 @@ import { App, Modal, Setting, Notice } from 'obsidian';
 import { } from './common';
 import { MessageUI } from './message_ui'
 import { GetAuth } from '../get/auth';
-import * as fs from 'fs-extra';
 import { } from '../get/const';
 import type GetImporterPlugin from '../../main';
 import * as playwright from 'playwright';
