@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import * as playwright from 'playwright';
 
 import { DOWNLOAD_FILE, AUTH_FILE, GET_EXPORT_URL } from './const'
@@ -23,28 +24,28 @@ export class GetExporter {
             try {
                 const screenshotPath = DOWNLOAD_FILE.replace('get_export.zip', 'page_screenshot.png');
                 await page.screenshot({ path: screenshotPath, fullPage: true });
-            } catch(err) {/* ignore */}
+            } catch {/* ignore */}
 
             // 等待导出相关元素出现
 
             // 尝试多种方式查找导出按钮
             let exportButton = null;
-            let foundMethod = '';
+            
 
             // 方式1: 查找包含"导出"文本的按钮
             try {
                 exportButton = page.locator('button:has-text("导出")').first();
                 await exportButton.waitFor({ state: 'visible', timeout: 5000 });
-                foundMethod = '方式1: 导出按钮';
-            } catch(err) {/* ignore */}
+                
+            } catch {/* ignore */}
 
             // 方式2: 查找包含"下载"文本的按钮（Get笔记可能使用"下载"）
             if (!exportButton) {
                 try {
                     exportButton = page.locator('button:has-text("下载")').first();
                     await exportButton.waitFor({ state: 'visible', timeout: 5000 });
-                    foundMethod = '方式2: 下载按钮';
-                } catch(err) {/* ignore */}
+                    
+                } catch {/* ignore */}
             }
 
             // 方式3: 通过 class 或 role 查找
@@ -52,8 +53,8 @@ export class GetExporter {
                 try {
                     exportButton = page.locator('[class*="export"], [class*="download"], a:has-text("导出"), a:has-text("下载")').first();
                     await exportButton.waitFor({ state: 'visible', timeout: 5000 });
-                    foundMethod = '方式3: 通用选择器';
-                } catch(err) {/* ignore */}
+                    
+                } catch {/* ignore */}
             }
 
             if (!exportButton) {

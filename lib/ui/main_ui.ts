@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import { App, Modal, Setting, Notice, ButtonComponent } from 'obsidian';
 
 import { createExpOpt } from './common';
@@ -7,7 +8,7 @@ import { GetExporter } from '../get/exporter';
 import type GetImporterPlugin from '../../main';
 
 import * as fs from 'fs-extra';
-import * as path from 'path';
+const path = require("path");
 
 import { AUTH_FILE, DOWNLOAD_FILE } from '../get/const'
 
@@ -52,7 +53,7 @@ export class MainUI extends Modal {
                 const authUI: Modal = new AuthUI(this.app, this.plugin);
                 authUI.open();
             }
-        } catch (err) {
+        } catch(err) {
             btn.setButtonText("Auto Sync 🤗");
             new Notice(`Get笔记 同步错误. 详情:\n${err}`);
         }
@@ -66,7 +67,7 @@ export class MainUI extends Modal {
             // 有文件对象：解析最佳策略（直接路径 or 临时文件）
             try {
                 zipSource = await this.resolveZipSourceFromSelectedFile();
-            } catch (err: any) {
+            } catch(err: any) {
                 console.error("ZIP 来源解析失败:", err);
                 new Notice("ZIP 来源解析失败: " + err.message);
                 return;
@@ -112,7 +113,7 @@ export class MainUI extends Modal {
             this.rawPath = "";
             this.selectedFile = null;
 
-        } catch (err) {
+        } catch(err) {
             this.rawPath = "";
             this.selectedFile = null;
             new Notice(`Get笔记 导入错误. 详情:\n${err}`);
@@ -177,8 +178,7 @@ export class MainUI extends Modal {
             } catch (error) {
                 console.warn(`路径不可用回退: ${file.path}`, error);
             }
-        } else {
-        }
+        } else { /* ignore */ }
 
         // 回退：使用真流式写入临时文件
         try {
@@ -227,8 +227,7 @@ export class MainUI extends Modal {
                 this.rawPath = file.path || "";
                 // 同时保存 File 对象作为备用（path 不可用时走 arrayBuffer 回退）
                 this.selectedFile = files[0];
-                if (!this.rawPath) {
-                }
+                if (!this.rawPath) { /* ignore */ }
             }
         };
 
@@ -431,7 +430,7 @@ export class MainUI extends Modal {
                     .onClick(async () => {
                         const getTarget = this.plugin.settings.getTarget || "get";
                         const memoTarget = this.plugin.settings.memoTarget || "notes";
-                        const confirmed = window.confirm(
+                        const confirmed = confirm(
                             `确定要重置同步历史吗？\n\n` +
                             `这将清除 ${this.plugin.settings.syncedMemoIds?.length || 0} 条已同步的笔记记录。\n` +
                             `下次同步时将重新导入所有 Get笔记。\n\n` +

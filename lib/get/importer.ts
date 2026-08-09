@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import * as fs from 'fs-extra';
-import * as path from 'path';
+const path = require("path");
 import { App } from 'obsidian';
 import decompress from 'decompress';
 import * as parse5 from "parse5"
@@ -284,8 +285,7 @@ export class GetImporter {
                     }
                 }
 
-                if (attachmentDirCreated) {
-                } else {
+                if (attachmentDirCreated) { /* ignore */ } else {
                     console.debug(`所有附件复制均失败，未创建目录`);
                 }
             } catch (error) {

@@ -19510,15 +19510,15 @@ ${details.join("\n")}`;
     }
     async function missingFileDependenciesWindows(filePath) {
       const executable = _path.default.join(__dirname, "..", "..", "..", "bin", "PrintDeps.exe");
-      const dirname2 = _path.default.dirname(filePath);
+      const dirname = _path.default.dirname(filePath);
       const {
         stdout,
         code
       } = await (0, _spawnAsync.spawnAsync)(executable, [filePath], {
-        cwd: dirname2,
+        cwd: dirname,
         env: {
           ...process.env,
-          LD_LIBRARY_PATH: process.env.LD_LIBRARY_PATH ? `${process.env.LD_LIBRARY_PATH}:${dirname2}` : dirname2
+          LD_LIBRARY_PATH: process.env.LD_LIBRARY_PATH ? `${process.env.LD_LIBRARY_PATH}:${dirname}` : dirname
         }
       });
       if (code !== 0)
@@ -19527,7 +19527,7 @@ ${details.join("\n")}`;
       return missingDeps;
     }
     async function missingFileDependencies(filePath, extraLDPaths) {
-      const dirname2 = _path.default.dirname(filePath);
+      const dirname = _path.default.dirname(filePath);
       let LD_LIBRARY_PATH = extraLDPaths.join(":");
       if (process.env.LD_LIBRARY_PATH)
         LD_LIBRARY_PATH = `${process.env.LD_LIBRARY_PATH}:${LD_LIBRARY_PATH}`;
@@ -19535,7 +19535,7 @@ ${details.join("\n")}`;
         stdout,
         code
       } = await (0, _spawnAsync.spawnAsync)("ldd", [filePath], {
-        cwd: dirname2,
+        cwd: dirname,
         env: {
           ...process.env,
           LD_LIBRARY_PATH
@@ -61922,8 +61922,8 @@ __export(const_exports, {
 var path, os, GET_CACHE_LOC, GET_PLAYWRIGHT_CACHE_LOC, AUTH_FILE, DOWNLOAD_FILE, GET_LOGIN_URL, GET_EXPORT_URL;
 var init_const = __esm({
   "lib/get/const.ts"() {
-    path = __toESM(require("path"));
-    os = __toESM(require("os"));
+    path = require("path");
+    os = require("os");
     GET_CACHE_LOC = path.join(os.homedir(), "/.get/cache/");
     GET_PLAYWRIGHT_CACHE_LOC = path.join(os.homedir(), "/.get/cache/playwright/");
     AUTH_FILE = GET_PLAYWRIGHT_CACHE_LOC + "get_auth.json";
@@ -62638,7 +62638,7 @@ var require_BufferList = __commonJS({
         this.head = this.tail = null;
         this.length = 0;
       };
-      BufferList.prototype.join = function join5(s) {
+      BufferList.prototype.join = function join2(s) {
         if (this.length === 0)
           return "";
         var p = this.head;
@@ -76112,7 +76112,7 @@ var GetAuth = class {
       if (browser) {
         try {
           await browser.close();
-        } catch (err) {
+        } catch (e) {
         }
       }
       return [false, error.message || error];
@@ -76123,7 +76123,7 @@ var GetAuth = class {
       await page.waitForTimeout(1e4);
       try {
         await page.waitForURL("**/note**", { timeout: 3e4 });
-      } catch (err) {
+      } catch (e) {
         console.warn("\u672A\u80FD\u68C0\u6D4B\u5230URL\u8DF3\u8F6C\uFF0C\u4F46\u5C06\u7EE7\u7EED\u5C1D\u8BD5\u4FDD\u5B58\u8BA4\u8BC1\u72B6\u6001");
       }
       await page.context().storageState({ path: AUTH_FILE });
@@ -76133,7 +76133,7 @@ var GetAuth = class {
     } catch (error) {
       try {
         await browser.close();
-      } catch (err) {
+      } catch (e) {
       }
       return [false, error.message || error];
     }
@@ -76205,7 +76205,7 @@ var AuthUI = class extends import_obsidian2.Modal {
     if (this.browser) {
       try {
         await this.browser.close();
-      } catch (err) {
+      } catch (e) {
       }
       this.browser = null;
       this.context = null;
@@ -76221,7 +76221,6 @@ var AuthUI = class extends import_obsidian2.Modal {
 
 // lib/get/importer.ts
 var fs2 = __toESM(require_lib());
-var path2 = __toESM(require("path"));
 var import_decompress = __toESM(require_decompress());
 
 // node_modules/parse5/dist/common/unicode.js
@@ -84542,14 +84541,14 @@ function process2(parentNode) {
     } else if (node.nodeType === 1) {
       replacement = replacementForNode.call(self, node);
     }
-    return join2(output, replacement);
+    return join(output, replacement);
   }, "");
 }
 function postProcess(output) {
   var self = this;
   this.rules.forEach(function(rule) {
     if (typeof rule.append === "function") {
-      output = join2(output, rule.append(self.options));
+      output = join(output, rule.append(self.options));
     }
   });
   return output.replace(/^[\t\r\n]+/, "").replace(/[\t\r\n\s]+$/, "");
@@ -84562,7 +84561,7 @@ function replacementForNode(node) {
     content = content.trim();
   return whitespace.leading + rule.replacement(content, node, this.options) + whitespace.trailing;
 }
-function join2(output, replacement) {
+function join(output, replacement) {
   var s1 = trimTrailingNewlines(output);
   var s2 = trimLeadingNewlines(replacement);
   var nls = Math.max(output.length - s1.length, replacement.length - s2.length);
@@ -85130,6 +85129,7 @@ async function generateCanvas(app, flomo, config) {
 
 // lib/get/importer.ts
 init_const();
+var path2 = require("path");
 var ATTACHMENT_EXTENSIONS = {
   image: ["jpg", "jpeg", "png", "gif", "webp", "heic", "bmp", "svg"],
   audio: ["mp3", "m4a", "wav", "aac", "ogg", "flac"],
@@ -85331,30 +85331,26 @@ var GetExporter = class {
       try {
         const screenshotPath = DOWNLOAD_FILE.replace("get_export.zip", "page_screenshot.png");
         await page.screenshot({ path: screenshotPath, fullPage: true });
-      } catch (err) {
+      } catch (e) {
       }
       let exportButton = null;
-      let foundMethod = "";
       try {
         exportButton = page.locator('button:has-text("\u5BFC\u51FA")').first();
         await exportButton.waitFor({ state: "visible", timeout: 5e3 });
-        foundMethod = "\u65B9\u5F0F1: \u5BFC\u51FA\u6309\u94AE";
-      } catch (err) {
+      } catch (e) {
       }
       if (!exportButton) {
         try {
           exportButton = page.locator('button:has-text("\u4E0B\u8F7D")').first();
           await exportButton.waitFor({ state: "visible", timeout: 5e3 });
-          foundMethod = "\u65B9\u5F0F2: \u4E0B\u8F7D\u6309\u94AE";
-        } catch (err) {
+        } catch (e) {
         }
       }
       if (!exportButton) {
         try {
           exportButton = page.locator('[class*="export"], [class*="download"], a:has-text("\u5BFC\u51FA"), a:has-text("\u4E0B\u8F7D")').first();
           await exportButton.waitFor({ state: "visible", timeout: 5e3 });
-          foundMethod = "\u65B9\u5F0F3: \u901A\u7528\u9009\u62E9\u5668";
-        } catch (err) {
+        } catch (e) {
         }
       }
       if (!exportButton) {
@@ -85385,8 +85381,8 @@ var GetExporter = class {
 
 // lib/ui/main_ui.ts
 var fs3 = __toESM(require_lib());
-var path3 = __toESM(require("path"));
 init_const();
+var path3 = require("path");
 var MainUI = class extends import_obsidian3.Modal {
   constructor(app, plugin) {
     super(app);
@@ -85680,7 +85676,7 @@ ${err}`);
         var _a3;
         const getTarget = this.plugin.settings.getTarget || "get";
         const memoTarget = this.plugin.settings.memoTarget || "notes";
-        const confirmed = window.confirm(`\u786E\u5B9A\u8981\u91CD\u7F6E\u540C\u6B65\u5386\u53F2\u5417\uFF1F
+        const confirmed = confirm(`\u786E\u5B9A\u8981\u91CD\u7F6E\u540C\u6B65\u5386\u53F2\u5417\uFF1F
 
 \u8FD9\u5C06\u6E05\u9664 ${((_a3 = this.plugin.settings.syncedMemoIds) == null ? void 0 : _a3.length) || 0} \u6761\u5DF2\u540C\u6B65\u7684\u7B14\u8BB0\u8BB0\u5F55\u3002
 \u4E0B\u6B21\u540C\u6B65\u65F6\u5C06\u91CD\u65B0\u5BFC\u5165\u6240\u6709 Get\u7B14\u8BB0\u3002

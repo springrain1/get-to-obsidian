@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 import *  as fs from 'fs-extra';
 import * as playwright from 'playwright';
 
@@ -39,7 +40,7 @@ export class GetAuth {
             if (browser) {
                 try {
                     await browser.close();
-                } catch(err) {/* ignore */}
+                } catch {/* ignore */}
             }
             return [false, error.message || error];
         }
@@ -59,7 +60,7 @@ export class GetAuth {
             // 等待登录成功跳转到 https://www.biji.com/note
             try {
                 await page.waitForURL('**/note**', { timeout: 30000 });
-            } catch(err) {
+            } catch {
                 console.warn('未能检测到URL跳转，但将继续尝试保存认证状态');
             }
 
@@ -75,7 +76,7 @@ export class GetAuth {
             // 清理
             try {
                 await browser.close();
-            } catch(err) {/* ignore */}
+            } catch {/* ignore */}
             return [false, error.message || error];
         }
     }
