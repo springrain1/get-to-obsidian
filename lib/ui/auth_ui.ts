@@ -39,7 +39,7 @@ export class AuthUI extends Modal {
 
         // 按钮区域
         new Setting(contentEl)
-            .setDesc("前置条件: npx playwright@1.43.1 install")
+            .setDesc("前置条件: npx playwright@1.56.0 install")
             .addButton((btn) => {
                 btn.setButtonText("取消")
                     .onClick(async () => {

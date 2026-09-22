@@ -178,7 +178,7 @@ npm install
 #### 3. 安装开发环境的 Playwright
 
 ```bash
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 ```
 
 > 这一步用于源码开发和构建。Playwright 不会打包进 `main.js`，以避免移动端加载失败。
@@ -190,13 +190,13 @@ npx playwright@1.43.1 install chromium
 
 ```bash
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 ```
 
 或者强制重新安装：
 
 ```bash
-npx playwright@1.43.1 install chromium --force
+npx playwright@1.56.0 install chromium --force
 ```
 
 </details>
@@ -234,8 +234,8 @@ Playwright 不会打包进 `main.js`。如果要使用 Playwright 自动登录�
 
 ```bash
 cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
-npm install playwright@1.43.1
-npx playwright@1.43.1 install chromium
+npm install playwright@1.56.0
+npx playwright@1.56.0 install chromium
 ```
 
 不要在 Vault 根目录或系统全局安装后直接期待插件能够加载到该依赖。
@@ -252,7 +252,7 @@ npx playwright@1.43.1 install chromium
 2. 在 BRAT 设置中添加此仓库
 3. BRAT 会自动下载和更新插件
 
-> ⚠️ **注意**：使用 BRAT 安装后，如需使用 Playwright 通道，请进入实际插件目录执行 `npm install playwright@1.43.1`，再执行 `npx playwright@1.43.1 install chromium`。
+> ⚠️ **注意**：使用 BRAT 安装后，如需使用 Playwright 通道，请进入实际插件目录执行 `npm install playwright@1.56.0`，再执行 `npx playwright@1.56.0 install chromium`。
 
 ---
 
@@ -958,7 +958,7 @@ cd get-to-obsidian
 npm install
 
 # 安装 Playwright
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 
 # 开发模式（热重载）
 npm run dev
@@ -1107,7 +1107,7 @@ git push
 **问题**：浏览器打开后无法完成登录
 
 **解决**：
-1. 如果使用 Playwright 通道，请在实际插件目录执行：`npm install playwright@1.43.1`，然后执行 `npx playwright@1.43.1 install chromium`
+1. 如果使用 Playwright 通道，请在实际插件目录执行：`npm install playwright@1.56.0`，然后执行 `npx playwright@1.56.0 install chromium`
 2. 检查网络连接，确保能访问 得到大脑（原Get笔记） 官网
 3. 手动操作登录流程：
    - 输入手机号
@@ -1183,20 +1183,20 @@ git push
 cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
 
 # 安装运行时模块
-npm install playwright@1.43.1
+npm install playwright@1.56.0
 
 # 下载 Chromium
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 
 # 如需强制重新下载 Chromium
-npx playwright@1.43.1 install chromium --force
+npx playwright@1.56.0 install chromium --force
 
 # 如果 npm 缓存损坏，可以清除后重试
 npm cache clean --force
 
 # 中国大陆网络环境可使用镜像
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 ```
 
 ### 从旧版本升级

@@ -170,7 +170,7 @@ npm install
 #### 3. Install Playwright for development
 
 ```bash
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 ```
 
 > This step is for source development and builds. Playwright is intentionally not bundled into `main.js` so the plugin can still load on mobile.
@@ -182,13 +182,13 @@ If installation fails in mainland China:
 
 ```bash
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 ```
 
 Or force reinstall:
 
 ```bash
-npx playwright@1.43.1 install chromium --force
+npx playwright@1.56.0 install chromium --force
 ```
 
 </details>
@@ -225,8 +225,8 @@ Playwright is not bundled into `main.js`. If you use the Playwright login or syn
 
 ```bash
 cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
-npm install playwright@1.43.1
-npx playwright@1.43.1 install chromium
+npm install playwright@1.56.0
+npx playwright@1.56.0 install chromium
 ```
 
 Installing it in the Vault root or globally does not guarantee that Obsidian can resolve it.
@@ -849,7 +849,7 @@ cd get-to-obsidian
 npm install
 
 # Install Playwright
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 
 # Development mode (hot reload)
 npm run dev
@@ -910,7 +910,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical documentation.
 ### Login fails or times out
 
 **Solution**:
-1. If you use the Playwright channel, run `npm install playwright@1.43.1` in the actual plugin directory, then run `npx playwright@1.43.1 install chromium`
+1. If you use the Playwright channel, run `npm install playwright@1.56.0` in the actual plugin directory, then run `npx playwright@1.56.0 install chromium`
 2. Check network connection to 得到大脑（原Get笔记）
 3. Manually complete login steps in browser
 4. Wait 10-15 seconds, don't close browser
@@ -933,20 +933,20 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical documentation.
 cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
 
 # Install the runtime module
-npm install playwright@1.43.1
+npm install playwright@1.56.0
 
 # Download Chromium
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 
 # Force a Chromium download if needed
-npx playwright@1.43.1 install chromium --force
+npx playwright@1.56.0 install chromium --force
 
 # If the npm cache is corrupted, clear it and retry
 npm cache clean --force
 
 # Use a mirror in mainland China
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install chromium
+npx playwright@1.56.0 install chromium
 ```
 
 ### Canvas or Moments not displaying
