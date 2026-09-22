@@ -15,21 +15,28 @@ A plugin to sync your [得到大脑（原Get笔记）](https://www.biji.com/) (G
 
 ---
 
-## 🎉 Version 3.9.0 Latest Update
+## 🎉 Version 4.0.0 Latest Update
 
-### 🚀 Web Private API Full Channel Sync
-- **Fast Pull & Incremental Updates**: A boon for non-PRO users! Supports fully pulling personal cloud notes, auto-recording cursors for incremental syncs, and optional native Markdown export for maximum fidelity.
-- **Rapid Single Note Push**: Instantly push the currently active note directly to the cloud with a single click in the editor.
-- **Advanced Markdown Renderer**: Built-in custom rendering engine that perfectly parses Obsidian syntax (highlights, math formulas, task lists) and auto-uploads local images to the Get Notes cloud format.
-
-### 🎨 UI Experience & UX Refactoring
-- **Settings Panel Tab Refactoring**: Completely overhauled the long single-page settings into a modern Tab structure, divided into "Sync & Pull", "Push & Bidirectional", "Advanced Options", and "License" sections.
-- **Editor Foundation Enhancements**: Brought in CodeMirror extension dependencies to achieve seamless hiding of bidirectional sync markers (e.g. `<!-- getnote:content:start -->`) in reading and Live Preview modes.
-- **Full Multilingual (i18n) Support**: Rebuilt the plugin with a comprehensive bilingual architecture. The plugin now 100% supports a seamless English environment, automatically detecting the system language to translate all settings, modals, commands, and prompts.
+### 🚀 Web Batch Push & End-to-End Updates
+- **Web Batch Push**: A brand-new Web batch push mechanism supporting one-click local scanning and selection to push multiple notes to the Get Notes cloud, displaying real-time progress and success rates to massively improve sync efficiency.
+- **Web Updates & Force Updates**: Web Private API now supports updating existing remote notes. Introduced identity-based idempotency to automatically skip identical notes, while providing a explicit "Force Update" feature to overwrite outdated cloud notes.
+- **Batch & Debug Tooling**: Introduced Web Batch Session management to improve the stability of batch pushes, and added a Debug module for full-link troubleshooting of network requests.
+- **Frontmatter Parsing Optimization**: Deeply refactored `FrontmatterManager` and tag parsing logic to further ensure the stability and consistency of YAML metadata during syncing.
 
 ---
 
 ## 📋 Version History Highlights
+
+### V3.9.1 - Multi-Account Isolation & Concurrency Refactor
+- **Unified Channel Lifecycle**: Introduced `ChannelRuntimeManager` to achieve strict lifecycle isolation during multi-channel concurrency.
+- **Safe Cancellation & Deep Tracking**: Added strongly consistent interruptions, tracking exact synchronized `items` within `SyncHistory`.
+
+### V3.9.0 - Web Private API Full Channel Sync
+- **Fast Pull & Incremental Updates**: A boon for non-PRO users! Supports fully pulling personal cloud notes, auto-recording cursors for incremental syncs, and optional native Markdown export for maximum fidelity.
+- **Rapid Single Note Push**: Instantly push the currently active note directly to the cloud with a single click in the editor.
+- **Advanced Markdown Renderer**: Built-in custom rendering engine that perfectly parses Obsidian syntax and auto-uploads local images to the cloud.
+- **Settings Panel Tab Refactoring**: Completely overhauled the long single-page settings into a modern Tab structure for vastly improved usability.
+- **Full Multilingual (i18n) Support**: The plugin now 100% supports a seamless English environment, automatically detecting the system language to translate all settings, modals, commands, and prompts.
 
 ### V3.8.0 - Bidirectional Sync Safety Boundary
 
@@ -143,7 +150,7 @@ A plugin to sync your [得到大脑（原Get笔记）](https://www.biji.com/) (G
 ### Prerequisites
 - **Obsidian**: Version 0.15.0 or higher
 - **Node.js**: For building the plugin
-- **Playwright**: Browser automation (required)
+- **Playwright**: Required only for the desktop Playwright sync channel; OpenAPI/Web channels do not need it
 
 ### Manual Installation
 
@@ -160,13 +167,13 @@ cd get-to-obsidian
 npm install
 ```
 
-#### 3. Install Playwright (Important!)
+#### 3. Install Playwright for development
 
 ```bash
-npx playwright@1.43.1 install
+npx playwright@1.43.1 install chromium
 ```
 
-> ⚠️ **Playwright is required**: This plugin uses Playwright for browser automation - it's essential for sync functionality.
+> This step is for source development and builds. Playwright is intentionally not bundled into `main.js` so the plugin can still load on mobile.
 
 <details>
 <summary>💡 Playwright installation issues? Click for solutions</summary>
@@ -175,13 +182,13 @@ If installation fails in mainland China:
 
 ```bash
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.43.1 install chromium
 ```
 
 Or force reinstall:
 
 ```bash
-npx playwright@1.43.1 install --force
+npx playwright@1.43.1 install chromium --force
 ```
 
 </details>
@@ -212,7 +219,19 @@ cp deploy.sh deploy.local.sh
 ./deploy.local.sh
 ```
 
-#### 6. Enable Plugin
+#### 6. Install Playwright in the actual plugin directory
+
+Playwright is not bundled into `main.js`. If you use the Playwright login or sync channel, run these commands in the actual installed plugin directory after copying the plugin files:
+
+```bash
+cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
+npm install playwright@1.43.1
+npx playwright@1.43.1 install chromium
+```
+
+Installing it in the Vault root or globally does not guarantee that Obsidian can resolve it.
+
+#### 7. Enable Plugin
 
 1. Restart Obsidian
 2. Go to `Settings` → `Community plugins` → Turn off `Safe mode`
@@ -891,7 +910,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical documentation.
 ### Login fails or times out
 
 **Solution**:
-1. Confirm Playwright is installed: `npx playwright@1.43.1 install`
+1. If you use the Playwright channel, run `npm install playwright@1.43.1` in the actual plugin directory, then run `npx playwright@1.43.1 install chromium`
 2. Check network connection to 得到大脑（原Get笔记）
 3. Manually complete login steps in browser
 4. Wait 10-15 seconds, don't close browser
@@ -910,17 +929,24 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical documentation.
 ### Playwright installation fails
 
 ```bash
-# Method 1: Force reinstall
-npx playwright@1.43.1 install --force
+# Change to the actual plugin directory, not the Vault root
+cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
 
-# Method 2: Clear cache
+# Install the runtime module
+npm install playwright@1.43.1
+
+# Download Chromium
+npx playwright@1.43.1 install chromium
+
+# Force a Chromium download if needed
+npx playwright@1.43.1 install chromium --force
+
+# If the npm cache is corrupted, clear it and retry
 npm cache clean --force
-npm install
-npx playwright@1.43.1 install
 
-# Method 3: Use mirror (China)
+# Use a mirror in mainland China
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.43.1 install chromium
 ```
 
 ### Canvas or Moments not displaying

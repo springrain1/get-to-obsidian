@@ -17,21 +17,28 @@ A plugin to sync your [得到大脑（原Get笔记）](https://www.biji.com/) (G
 
 ---
 
-## 🎉 Version 3.9.0 最新更新
+## 🎉 Version 4.0.0 最新更新
 
-### 🚀 Web 私有 API 全通道同步
-- **极速拉取与增量更新**：非 PRO 用户福音！支持完整拉取个人云端笔记，自动记录游标进行增量同步，可选原生 Markdown 格式导出以保留最高保真度。
-- **单篇极速推送**：在编辑器内点击即可将当前笔记一键推送到云端。
-- **高级 Markdown 渲染器**：内置自定义渲染引擎，自动将 Obsidian 中的高亮、数学公式、任务列表等语法，以及本地图片完美解析并上传至 Get 笔记云端格式。
-
-### 🎨 界面体验与交互重构
-- **设置面板标签页重构**：将冗长的单页设置全面升级为现代化的 Tab 标签页结构，分为“同步与拉取”、“双向与推送”、“高级选项”和“授权”四大板块。
-- **编辑器底层优化**：引入 CodeMirror 扩展依赖，在阅读器和实时预览模式下实现了同步标记（如 `<!-- getnote:content:start -->`）的无感隐藏。
-- **全量国际化（i18n）支持**：全面接入双语字典架构，插件现已 100% 支持纯英文环境无缝切换，包含所有核心设置面板、命令和模态弹窗，自动识别系统语言。
+### 🚀 Web 批量推送与端到端更新
+- **Web 批量推送 (Batch Push)**：全新推出的 Web 批量推送机制，支持一键扫描与勾选本地笔记，将其批量推送到 Get 云端，并实时展示进度与成功率，大幅提高多笔记同步效率。
+- **Web 端更新与强制更新**：Web 私有 API 现在支持更新（Update）远端已存在的笔记。新增基于身份的幂等性（Idempotency）跳过机制，并提供“强制更新”显式覆盖云端旧笔记的能力。
+- **批量与网络调试支持**：引入 Web Batch Session 会话管理以提升批量推送的稳定性，并新增 Debug 模块用于网络请求的全链路排查。
+- **Frontmatter 解析优化**：深度重构了 FrontmatterManager 及其标签解析逻辑，进一步保障了 YAML 元数据在同步过程中的稳定性与一致性。
 
 ---
 
 ## 📋 历史版本亮点
+
+### V3.9.1 - 多账号隔离与并发架构重构
+- **统一通道生命周期管理**：引入 `ChannelRuntimeManager`，实现多通道并行时严格的生命周期隔离。
+- **安全取消与深度追踪**：新增强一致性的异常中断，并能在 `SyncHistory` 中详细追踪每次同步涉及的具体事项。
+
+### V3.9.0 - Web 私有 API 全通道同步
+- **极速拉取与增量更新**：非 PRO 用户福音！支持完整拉取个人云端笔记，自动记录游标进行增量同步，可选原生 Markdown 格式导出以保留最高保真度。
+- **单篇极速推送**：在编辑器内点击即可将当前笔记一键推送到云端。
+- **高级 Markdown 渲染器**：内置自定义渲染引擎，自动将 Obsidian 中的高亮、数学公式、任务列表等语法，以及本地图片完美解析并上传至 Get 笔记云端格式。
+- **设置面板标签页重构**：将冗长的单页设置全面升级为现代化的 Tab 标签页结构，分为“同步与拉取”、“双向与推送”、“高级选项”和“授权”四大板块。
+- **全量国际化（i18n）支持**：全面接入双语字典架构，插件现已 100% 支持纯英文环境无缝切换，包含所有核心设置面板、命令和模态弹窗，自动识别系统语言。
 
 ### V3.8.0 - 双向同步安全边界与配置防呆
 
@@ -151,7 +158,7 @@ A plugin to sync your [得到大脑（原Get笔记）](https://www.biji.com/) (G
 
 - **Obsidian**：版本 0.15.0 或更高
 - **Node.js**：用于构建插件（如果手动安装）
-- **Playwright**：浏览器自动化工具（必需）
+- **Playwright**：仅 Playwright 桌面同步通道需要，OpenAPI/Web 通道不需要
 
 ### 方式一：手动安装（推荐）
 
@@ -168,13 +175,13 @@ cd get-to-obsidian
 npm install
 ```
 
-#### 3. 安装 Playwright（重要！）
+#### 3. 安装开发环境的 Playwright
 
 ```bash
-npx playwright@1.43.1 install
+npx playwright@1.43.1 install chromium
 ```
 
-> ⚠️ **必须安装 Playwright**：本插件使用 Playwright 进行浏览器自动化，这是同步功能的核心依赖。
+> 这一步用于源码开发和构建。Playwright 不会打包进 `main.js`，以避免移动端加载失败。
 
 <details>
 <summary>💡 Playwright 安装失败？点击查看解决方案</summary>
@@ -183,13 +190,13 @@ npx playwright@1.43.1 install
 
 ```bash
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.43.1 install chromium
 ```
 
 或者强制重新安装：
 
 ```bash
-npx playwright@1.43.1 install --force
+npx playwright@1.43.1 install chromium --force
 ```
 
 </details>
@@ -221,7 +228,19 @@ cp deploy.sh deploy.local.sh
 ./deploy.local.sh
 ```
 
-#### 6. 启用插件
+#### 6. 在实际插件目录安装 Playwright
+
+Playwright 不会打包进 `main.js`。如果要使用 Playwright 自动登录或自动同步，请在复制文件后的实际插件目录中执行：
+
+```bash
+cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
+npm install playwright@1.43.1
+npx playwright@1.43.1 install chromium
+```
+
+不要在 Vault 根目录或系统全局安装后直接期待插件能够加载到该依赖。
+
+#### 7. 启用插件
 
 1. 重启 Obsidian
 2. 进入 `设置` → `第三方插件` → 关闭`安全模式`
@@ -233,7 +252,7 @@ cp deploy.sh deploy.local.sh
 2. 在 BRAT 设置中添加此仓库
 3. BRAT 会自动下载和更新插件
 
-> ⚠️ **注意**：使用 BRAT 安装后，仍需手动安装 Playwright：`npx playwright@1.43.1 install`
+> ⚠️ **注意**：使用 BRAT 安装后，如需使用 Playwright 通道，请进入实际插件目录执行 `npm install playwright@1.43.1`，再执行 `npx playwright@1.43.1 install chromium`。
 
 ---
 
@@ -1088,7 +1107,7 @@ git push
 **问题**：浏览器打开后无法完成登录
 
 **解决**：
-1. 确认已安装 Playwright：`npx playwright@1.43.1 install`
+1. 如果使用 Playwright 通道，请在实际插件目录执行：`npm install playwright@1.43.1`，然后执行 `npx playwright@1.43.1 install chromium`
 2. 检查网络连接，确保能访问 得到大脑（原Get笔记） 官网
 3. 手动操作登录流程：
    - 输入手机号
@@ -1160,17 +1179,24 @@ git push
 
 **解决**：
 ```bash
-# 方法 1: 使用指定版本
-npx playwright@1.43.1 install --force
+# 进入实际插件目录，而不是 Vault 根目录
+cd "/path/to/your/vault/.obsidian/plugins/get-importer-sync"
 
-# 方法 2: 清除缓存后重装
+# 安装运行时模块
+npm install playwright@1.43.1
+
+# 下载 Chromium
+npx playwright@1.43.1 install chromium
+
+# 如需强制重新下载 Chromium
+npx playwright@1.43.1 install chromium --force
+
+# 如果 npm 缓存损坏，可以清除后重试
 npm cache clean --force
-npm install
-npx playwright@1.43.1 install
 
-# 方法 3: 使用镜像（中国大陆）
+# 中国大陆网络环境可使用镜像
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.43.1 install chromium
 ```
 
 ### 从旧版本升级
