@@ -5,6 +5,32 @@ All notable changes to the 得到大脑（原Get笔记） Importer plugin will b
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [4.0.0] - 2026-08-17
+
+### Added
+- 🚀 **Web Batch Push**: A brand-new Web batch push mechanism featuring a dedicated UI modal. Users can now select or fully scan local notes and push multiple files to the Get Notes cloud with a single click, viewing real-time progress and success rates.
+- 🔄 **Web Update & Force Update Support**: The Web Private API sync now supports updating existing remote notes rather than just creating new ones.
+  - **Idempotency**: During single note push, if a corresponding note already exists remotely and the content matches, it automatically skips to avoid creating duplicates.
+  - **Force Update**: When local content has changed, users can explicitly overwrite the old cloud note via the new Force Update feature.
+- 🛠️ **State Tracking & Debugging Tools**: Introduced Web Batch Session management, greatly enhancing stability and state tracking during batch pushes. Added a new Debug module for real-time troubleshooting of underlying Web channel network requests.
+
+### Changed
+- 🏷️ **Frontmatter Tag Parsing Optimization**: Deeply refactored `FrontmatterManager` and related tag logic to further strengthen stable parsing and alignment of complex metadata within YAML.
+
+---
+
+## [3.9.1] - 2026-08-14
+
+### Changed
+- 🔄 **Multi-Account & Concurrency Control**: Introduced `ChannelRuntimeManager` to reconstruct the underlying run lifecycles of Web, OpenAPI, and other sync channels, fully decoupling state management during multi-account concurrency.
+- ⚙️ **Multi-Channel Config Isolation**: Decoupled `pushSettings` data structures in the configuration files, now supporting independent push configurations for each synchronization channel.
+- 📊 **Sync Log Tracking Optimization**: Added an `items` field to `SyncHistory` to detail the specific notes involved in a sync task, significantly improving the ability to trace and troubleshoot.
+
+### Fixed
+- 🛡️ **Safe Cancellation Consistency**: Added a strictly consistent request cancellation mechanism (`SyncCancelledError` / `AbortController`). The sync engine now safely aborts immediately if environment changes or active termination is triggered, ensuring local state consistency.
+
+---
+
 ## [3.9.0] - 2026-08-09
 
 ### Added
