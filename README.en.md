@@ -163,7 +163,7 @@ npm install
 #### 3. Install Playwright (Important!)
 
 ```bash
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 ```
 
 > ⚠️ **Playwright is required**: This plugin uses Playwright for browser automation - it's essential for sync functionality.
@@ -175,13 +175,13 @@ If installation fails in mainland China:
 
 ```bash
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 ```
 
 Or force reinstall:
 
 ```bash
-npx playwright@1.43.1 install --force
+npx playwright@1.56.0 install --force
 ```
 
 </details>
@@ -830,7 +830,7 @@ cd get-to-obsidian
 npm install
 
 # Install Playwright
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 
 # Development mode (hot reload)
 npm run dev
@@ -891,7 +891,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical documentation.
 ### Login fails or times out
 
 **Solution**:
-1. Confirm Playwright is installed: `npx playwright@1.43.1 install`
+1. Confirm Playwright is installed: `npx playwright@1.56.0 install`
 2. Check network connection to 得到大脑（原Get笔记）
 3. Manually complete login steps in browser
 4. Wait 10-15 seconds, don't close browser
@@ -911,16 +911,16 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed technical documentation.
 
 ```bash
 # Method 1: Force reinstall
-npx playwright@1.43.1 install --force
+npx playwright@1.56.0 install --force
 
 # Method 2: Clear cache
 npm cache clean --force
 npm install
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 
 # Method 3: Use mirror (China)
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 ```
 
 ### Canvas or Moments not displaying

@@ -49,7 +49,9 @@ esbuild.build({
 		'@lezer/common',
 		'@lezer/highlight',
 		'@lezer/lr',
-		...builtins],
+		'chromium-bidi/*',
+		...builtins,
+		...builtins.map(m => `node:${m}`)],
 	format: 'cjs',
 	watch: !prod ? {
 		onRebuild(error) {

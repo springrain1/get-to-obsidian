@@ -171,7 +171,7 @@ npm install
 #### 3. 安装 Playwright（重要！）
 
 ```bash
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 ```
 
 > ⚠️ **必须安装 Playwright**：本插件使用 Playwright 进行浏览器自动化，这是同步功能的核心依赖。
@@ -183,13 +183,13 @@ npx playwright@1.43.1 install
 
 ```bash
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 ```
 
 或者强制重新安装：
 
 ```bash
-npx playwright@1.43.1 install --force
+npx playwright@1.56.0 install --force
 ```
 
 </details>
@@ -233,7 +233,7 @@ cp deploy.sh deploy.local.sh
 2. 在 BRAT 设置中添加此仓库
 3. BRAT 会自动下载和更新插件
 
-> ⚠️ **注意**：使用 BRAT 安装后，仍需手动安装 Playwright：`npx playwright@1.43.1 install`
+> ⚠️ **注意**：使用 BRAT 安装后，仍需手动安装 Playwright：`npx playwright@1.56.0 install`
 
 ---
 
@@ -939,7 +939,7 @@ cd get-to-obsidian
 npm install
 
 # 安装 Playwright
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 
 # 开发模式（热重载）
 npm run dev
@@ -1088,7 +1088,7 @@ git push
 **问题**：浏览器打开后无法完成登录
 
 **解决**：
-1. 确认已安装 Playwright：`npx playwright@1.43.1 install`
+1. 确认已安装 Playwright：`npx playwright@1.56.0 install`
 2. 检查网络连接，确保能访问 得到大脑（原Get笔记） 官网
 3. 手动操作登录流程：
    - 输入手机号
@@ -1161,16 +1161,16 @@ git push
 **解决**：
 ```bash
 # 方法 1: 使用指定版本
-npx playwright@1.43.1 install --force
+npx playwright@1.56.0 install --force
 
 # 方法 2: 清除缓存后重装
 npm cache clean --force
 npm install
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 
 # 方法 3: 使用镜像（中国大陆）
 export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
-npx playwright@1.43.1 install
+npx playwright@1.56.0 install
 ```
 
 ### 从旧版本升级
